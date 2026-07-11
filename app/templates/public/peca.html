@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ peca.titulo }} - Museu da Bíblia</title>
+    <!-- Adicionando o Bootstrap para um layout responsivo e elegante -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .hero-section { background-color: #2c3e50; color: white; padding: 3rem 1rem; border-bottom: 5px solid #e74c3c; }
+        .descricao-peca { font-size: 1.1rem; line-height: 1.8; color: #444; }
+        .media-card { border: none; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s; }
+        .media-card:hover { transform: translateY(-5px); }
+        .legenda { font-size: 0.9rem; color: #666; background: #fff; padding: 12px; margin: 0; text-align: center; }
+        video { width: 100%; border-bottom: 1px solid #eee; }
+    </style>
+</head>
+<body>
+
+    <header class="hero-section text-center shadow-sm">
+        <div class="container">
+            <h1 class="display-5 fw-bold">{{ peca.titulo }}</h1>
+            <p class="lead mb-0 text-white-50">Acervo Digital do Museu da Bíblia</p>
+        </div>
+    </header>
+
+    <main class="container py-5">
+        <section class="row justify-content-center mb-5">
+            <div class="col-lg-8 text-center">
+                <p class="descricao-peca">{{ peca.descricao }}</p>
+            </div>
+        </section>
+
+        <section class="mb-5">
+            <h3 class="mb-4 border-bottom pb-2">Galeria de Fotos</h3>
+            <div class="row g-4">
+                {% for midia in peca.midias %}
+                    {% if midia.tipo == 'foto' %}
+                    <div class="col-md-6 col-lg-4">
+                        <div class="media-card h-100 bg-white">
+                            <!-- A imagem é formatada para manter a proporção sem distorcer -->
+                            <img src="{{ midia.url_path }}" alt="Foto da peça" class="img-fluid w-100" style="height: 250px; object-fit: cover;">
+                            <p class="legenda">{{ midia.legenda }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </section>
+
+        <section>
+            <h3 class="mb-4 border-bottom pb-2">Material em Vídeo</h3>
+            <div class="row g-4">
+                {% for midia in peca.midias %}
+                    {% if midia.tipo == 'video' %}
+                    <div class="col-md-6">
+                        <div class="media-card bg-white">
+                            <!-- preload="metadata" economiza a banda do servidor (não baixa o vídeo todo até dar play) -->
+                            <video controls preload="metadata">
+                                <source src="{{ midia.url_path }}" type="video/mp4">
+                                Seu navegador não suporta a tag de vídeo.
+                            </video>
+                            <p class="legenda">{{ midia.legenda }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+
+    <footer class="text-center py-4 text-muted mt-5 bg-white border-top">
+        <small>&copy; Museu da Bíblia - Escaneie mais QR Codes pelo museu para descobrir a história!</small>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

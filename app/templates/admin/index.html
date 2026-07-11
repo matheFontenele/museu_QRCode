@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Painel de administração para gerenciar itens do Museu da Bíblia">
+    <meta name="theme-color" content="#1e2b3c">
+    <title>Painel Curador - Museu da Bíblia</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Google Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- Estilos Customizados -->
+    <style>
+        :root {
+            --primary-color: #1e2b3c;
+            --secondary-color: #f4f6f9;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+        }
+        
+        * {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            background-color: var(--secondary-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+        
+        /* ========== SIDEBAR ========== */
+        .sidebar {
+            background: linear-gradient(180deg, var(--primary-color) 0%, #2a3f5f 100%);
+            color: white;
+            min-height: 100vh;
+            position: sticky;
+            top: 0;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sidebar h4 {
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-link {
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+        
+        .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            font-weight: 600;
+        }
+        
+        /* ========== CONTEÚDO PRINCIPAL ========== */
+        main {
+            padding: 2rem;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .page-header h1 {
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 0;
+        }
+        
+        /* ========== ALERTAS ========== */
+        .alert {
+            border-radius: 10px;
+            border: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        
+        .alert-info {
+            background-color: #e7f3ff;
+            color: #0066cc;
+        }
+        
+        .alert-warning {
+            background-color: #fff4e6;
+            color: #cc7700;
+        }
+        
+        .alert-success {
+            background-color: #e6f9e6;
+            color: #00aa00;
+        }
+        
+        /* ========== CARD ========== */
+        .card {
+            border: none;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            transition: box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+        }
+        
+        /* ========== TABELA ========== */
+        .table {
+            margin-bottom: 0;
+        }
+        
+        .table thead {
+            background-color: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+        }
+        
+        .table th {
+            font-weight: 700;
+            color: var(--primary-color);
+            padding: 1rem;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .table td {
+            padding: 1rem;
+            vertical-align: middle;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .table tbody tr {
+            transition: background-color 0.2s ease;
+        }
+        
+        .table tbody tr:hover {
+            background-color: rgba(30, 43, 60, 0.02);
+        }
+        
+        /* ========== QR CODE ========== */
+        .qr-code-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .qr-code-img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            cursor: pointer;
+            transition: transform 0.2s ease, filter 0.2s ease;
+            border-radius: 8px;
+            padding: 4px;
+            background: white;
+        }
+        
+        .qr-code-img:hover {
+            transform: scale(1.15);
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
+        }
+        
+        .qr-code-img:active {
+            transform: scale(1.1);
+        }
+        
+        .badge-pendente {
+            background-color: #6c757d;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .badge-erro {
+            background-color: #dc3545;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        /* ========== BADGES ========== */
+        .badge {
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+        
+        /* ========== BOTÕES ========== */
+        .btn {
+            border-radius: 8px;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: #152038;
+            border-color: #152038;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 43, 60, 0.3);
+        }
+        
+        .btn-outline-success:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-sm {
+            padding: 0.35rem 0.75rem;
+            font-size: 0.8rem;
+        }
+        
+        /* ========== MODAL ========== */
+        .modal-header {
+            background: linear-gradient(90deg, var(--primary-color), #2a3f5f);
+            border-bottom: none;
+            border-radius: 12px 12px 0 0;
+        }
+        
+        .modal-content {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .modal-body {
+            padding: 2rem;
+        }
+        
+        .form-label {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .form-control,
+        .form-select,
+        textarea {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 0.75rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus,
+        .form-select:focus,
+        textarea:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(30, 43, 60, 0.25);
+        }
+        
+        .form-text {
+            color: #6c757d;
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+        }
+        
+        /* ========== FEEDBACK VISUAL ========== */
+        .text-truncate-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2; /* <-- Adicione esta linha */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+                
+        .loading-spinner {
+            display: none;
+        }
+        
+        /* ========== RESPONSIVO ========== */
+        @media (max-width: 768px) {
+            main {
+                padding: 1rem;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .page-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .table {
+                font-size: 0.85rem;
+            }
+            
+            .qr-code-img {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .btn-sm {
+                display: block;
+                width: 100%;
+                margin-top: 0.5rem;
+            }
+        }
+        
+        /* ========== ANIMAÇÕES ========== */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        /* ========== UTILITIES ========== */
+        .cursor-pointer {
+            cursor: pointer;
+        }
+        
+        .transition-smooth {
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- ========== MENU LATERAL ========== -->
+        <nav class="col-md-2 d-none d-md-block sidebar py-4">
+            <h4 class="text-center mb-4">📖 Museu da Bíblia</h4>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link text-white active" href="/admin" role="button" aria-current="page">
+                        <span class="material-icons" style="vertical-align: middle; margin-right: 0.5rem;">inventory_2</span>
+                        Acervo (Obras)
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- ========== CONTEÚDO PRINCIPAL ========== -->
+        <main class="col-md-10 ms-sm-auto">
+            
+            <!-- HEADER DA PÁGINA -->
+            <div class="page-header">
+                <h1>📋 Gerenciamento de Itens</h1>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#cadastrarModal" aria-label="Cadastrar novo item">
+                    ➕ Novo Item
+                </button>
+            </div>
+
+            <!-- ALERTA: Nenhuma peça cadastrada -->
+            {% if not pecas %}
+            <div class="alert alert-info alert-dismissible fade show fade-in" role="alert">
+                <strong>ℹ️ Nenhum item cadastrado!</strong> 
+                <p class="mb-0">Clique em "<strong>+ Novo Item</strong>" para adicionar sua primeira peça ao acervo.</p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar alerta"></button>
+            </div>
+            {% endif %}
+
+            <!-- TABELA DE PEÇAS -->
+            <div class="card p-0 fade-in">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col" style="width: 5%;">ID</th>
+                                <th scope="col" style="width: 15%;">QR Code</th>
+                                <th scope="col" style="width: 35%;">Título</th>
+                                <th scope="col" style="width: 15%;">Mídias</th>
+                                <th scope="col" style="width: 30%;">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for peca in pecas %}
+                            <tr>
+                                <!-- COLUNA: ID -->
+                                <td>
+                                    <span class="badge bg-primary">#{{ peca.id }}</span>
+                                </td>
+                                
+                                <!-- COLUNA: QR CODE -->
+                                <td class="qr-code-container">
+                                    {% if peca.qr_code_path %}
+                                        <!-- QR Code renderizado com sucesso -->
+                                        <a href="{{ peca.qr_code_path }}" 
+                                           target="_blank" 
+                                           rel="noopener noreferrer"
+                                           title="Clique para abrir o QR Code em tamanho grande (nova aba)" 
+                                           class="d-inline-block cursor-pointer">
+                                            <img src="{{ peca.qr_code_path }}?v={{ peca.id }}" 
+                                                 alt="QR Code da peça {{ peca.id }}: {{ peca.titulo }}" 
+                                                 class="qr-code-img border rounded" 
+                                                 loading="lazy"
+                                                 onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0...';">
+                                        </a>
+                                    {% else %}
+                                        <!-- QR Code ainda não foi gerado -->
+                                        <span class="badge badge-pendente" title="O QR Code ainda será gerado">
+                                            ⏳ Pendente
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                
+                                <!-- COLUNA: TÍTULO E DESCRIÇÃO -->
+                                <td>
+                                    <div class="fw-bold" title="{{ peca.titulo }}">
+                                        {{ peca.titulo }}
+                                    </div>
+                                    {% if peca.descricao %}
+                                        <small class="text-muted text-truncate-2" title="{{ peca.descricao }}">
+                                            {{ peca.descricao[:80] }}{% if peca.descricao|length > 80 %}...{% endif %}
+                                        </small>
+                                    {% else %}
+                                        <small class="text-muted fst-italic">Sem descrição</small>
+                                    {% endif %}
+                                </td>
+                                
+                                <!-- COLUNA: MÍDIAS -->
+                                <td>
+                                    {% if peca.midias and peca.midias|length > 0 %}
+                                        <span class="badge bg-success cursor-pointer" title="{{ peca.midias|length }} arquivo(s) associado(s)">
+                                            📁 {{ peca.midias|length }} arquivo(s)
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-secondary" title="Nenhuma mídia associada">
+                                            Nenhuma mídia
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                
+                                <!-- COLUNA: AÇÕES -->
+                                <td>
+                                    <a href="/peca/{{ peca.id }}" 
+                                       target="_blank" 
+                                       rel="noopener noreferrer"
+                                       class="btn btn-sm btn-outline-success" 
+                                       title="Abrir página de visualização como visitante (nova aba)">
+                                         Ver Visitante
+                                    </a>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <!-- Linha quando não há peças -->
+                            <tr>
+                                <td colspan="5" class="text-center text-muted py-5">
+                                    <div style="font-size: 2rem; margin-bottom: 1rem;">📭</div>
+                                    <strong>Nenhum item cadastrado ainda.</strong> 
+                                    <br>
+                                    <small>Clique no botão "<strong>+ Novo Item</strong>" para começar a adicionar peças ao seu acervo.</small>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+    </div>
+</div>
+
+<!-- ========== MODAL DE CADASTRO ========== -->
+<div class="modal fade" id="cadastrarModal" tabindex="-1" aria-labelledby="cadastrarLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <!-- HEADER DO MODAL -->
+      <div class="modal-header text-white">
+        <h5 class="modal-title" id="cadastrarLabel">➕ Cadastrar Novo Item no Acervo</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar modal"></button>
+      </div>
+
+      <!-- FORMULÁRIO DE CADASTRO -->
+      <form action="/admin/cadastrar" method="POST" enctype="multipart/form-data" id="formCadastro" novalidate>
+          <div class="modal-body">
+            
+            <!-- CAMPO: Título -->
+            <div class="mb-3">
+                <label for="titulo" class="form-label">📛 Nome / Título do Item</label>
+                <input type="text" 
+                       class="form-control" 
+                       id="titulo" 
+                       name="titulo" 
+                       maxlength="150" 
+                       required 
+                       aria-required="true"
+                       placeholder="Ex: Rolo de Isaías (Cópia)">
+                <div class="form-text">Máximo 150 caracteres. Campo obrigatório.</div>
+            </div>
+            
+            <!-- CAMPO: Descrição -->
+            <div class="mb-3">
+                <label for="descricao" class="form-label">📝 Texto Explicativo</label>
+                <textarea class="form-control" 
+                          id="descricao" 
+                          name="descricao" 
+                          rows="5" 
+                          maxlength="1000" 
+                          required
+                          aria-required="true"
+                          placeholder="Conte a história deste item..."></textarea>
+                <div class="form-text">
+                    Máximo 1000 caracteres. Este é o texto que o visitante lerá ao escanear o QR Code. Campo obrigatório.
+                </div>
+                <small id="descricaoCounter" class="text-muted d-block mt-2">0 / 1000 caracteres</small>
+            </div>
+
+            <hr class="my-4">
+            
+            <!-- CAMPO: Fotos -->
+            <div class="mb-3">
+                <label for="fotos" class="form-label text-success">📸 Fotos do Item</label>
+                <input class="form-control" 
+                       type="file" 
+                       id="fotos" 
+                       name="fotos" 
+                       multiple 
+                       accept="image/jpeg,image/png,image/gif,image/webp"
+                       aria-label="Selecionar fotos do item">
+                <div class="form-text">
+                    Selecione até 6 arquivos. Formatos aceitos: JPG, PNG, GIF, WebP. Máximo 50MB por arquivo.
+                </div>
+                <small id="fotosCounter" class="text-muted d-block mt-2">Nenhuma foto selecionada</small>
+            </div>
+
+            <!-- CAMPO: Vídeos -->
+            <div class="mb-3">
+                <label for="videos" class="form-label text-danger">🎥 Vídeos Complementares</label>
+                <input class="form-control" 
+                       type="file" 
+                       id="videos" 
+                       name="videos" 
+                       multiple 
+                       accept="video/mp4,video/webm,video/ogg"
+                       aria-label="Selecionar vídeos do item">
+                <div class="form-text">
+                    Selecione até 6 arquivos. Formatos aceitos: MP4, WebM, Ogg. Máximo 500MB por arquivo.
+                </div>
+                <small id="videosCounter" class="text-muted d-block mt-2">Nenhum vídeo selecionado</small>
+            </div>
+
+          </div>
+
+          <!-- FOOTER DO MODAL -->
+          <div class="modal-footer bg-light">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">
+                <span class="spinner-border spinner-border-sm loading-spinner me-2" role="status" aria-hidden="true"></span>
+                ✅ Salvar e Gerar QR Code
+            </button>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ========== BOOTSTRAP 5 JS ========== -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- ========== SCRIPTS CUSTOMIZADOS ========== -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // ========== VALIDAÇÃO DO FORMULÁRIO ==========
+    const formCadastro = document.getElementById('formCadastro');
+    const descricaoInput = document.getElementById('descricao');
+    const fotosInput = document.getElementById('fotos');
+    const videosInput = document.getElementById('videos');
+    const fotosCounter = document.getElementById('fotosCounter');
+    const videosCounter = document.getElementById('videosCounter');
+    const descricaoCounter = document.getElementById('descricaoCounter');
+    const submitBtn = formCadastro.querySelector('button[type="submit"]');
+    
+    // Contador de descrição em tempo real
+    if (descricaoInput) {
+        descricaoInput.addEventListener('input', function() {
+            const count = this.value.length;
+            descricaoCounter.textContent = `${count} / 1000 caracteres`;
+            
+            if (count > 900) {
+                descricaoCounter.classList.remove('text-muted');
+                descricaoCounter.classList.add('text-warning');
+            } else {
+                descricaoCounter.classList.add('text-muted');
+                descricaoCounter.classList.remove('text-warning');
+            }
+        });
+    }
+    
+    // Contador de fotos
+    if (fotosInput) {
+        fotosInput.addEventListener('change', function() {
+            const count = this.files.length;
+            if (count > 0) {
+                fotosCounter.textContent = `${count} foto(s) selecionada(s)`;
+                fotosCounter.classList.add('text-success');
+            } else {
+                fotosCounter.textContent = 'Nenhuma foto selecionada';
+                fotosCounter.classList.remove('text-success');
+            }
+        });
+    }
+    
+    // Contador de vídeos
+    if (videosInput) {
+        videosInput.addEventListener('change', function() {
+            const count = this.files.length;
+            if (count > 0) {
+                videosCounter.textContent = `${count} vídeo(s) selecionado(s)`;
+                videosCounter.classList.add('text-danger');
+            } else {
+                videosCounter.textContent = 'Nenhum vídeo selecionado';
+                videosCounter.classList.remove('text-danger');
+            }
+        });
+    }
+    
+    // Validação do formulário antes de enviar
+    if (formCadastro) {
+        formCadastro.addEventListener('submit', function(event) {
+            const titulo = document.getElementById('titulo').value.trim();
+            const descricao = document.getElementById('descricao').value.trim();
+            
+            // Validações
+            if (!titulo) {
+                event.preventDefault();
+                alert('⚠️ Por favor, preencha o título do item.');
+                document.getElementById('titulo').focus();
+                return false;
+            }
+            
+            if (titulo.length < 3) {
+                event.preventDefault();
+                alert('⚠️ O título deve ter no mínimo 3 caracteres.');
+                document.getElementById('titulo').focus();
+                return false;
+            }
+            
+            if (!descricao) {
+                event.preventDefault();
+                alert('⚠️ Por favor, preencha a descrição do item.');
+                document.getElementById('descricao').focus();
+                return false;
+            }
+            
+            if (descricao.length < 10) {
+                event.preventDefault();
+                alert('⚠️ A descrição deve ter no mínimo 10 caracteres.');
+                document.getElementById('descricao').focus();
+                return false;
+            }
+            
+            // Mostra spinner de loading
+            const spinner = submitBtn.querySelector('.loading-spinner');
+            if (spinner) {
+                spinner.style.display = 'inline-block';
+            }
+            submitBtn.disabled = true;
+            
+            console.log('✅ Formulário validado, enviando...');
+        });
+    }
+    
+    // Fecha o modal automaticamente após sucesso (será necessário ajustar no backend)
+    const cadastrarModal = document.getElementById('cadastrarModal');
+    if (cadastrarModal) {
+        cadastrarModal.addEventListener('hidden.bs.modal', function() {
+            // Limpa o formulário quando o modal é fechado
+            formCadastro.reset();
+            submitBtn.disabled = false;
+            const spinner = submitBtn.querySelector('.loading-spinner');
+            if (spinner) {
+                spinner.style.display = 'none';
+            }
+        });
+    }
+});
+
+// Logging para debugging
+console.log('✅ Scripts do painel admin carregados com sucesso');
+</script>
+
+</body>
+</html>

@@ -1,0 +1,27 @@
+# Ambientes Virtuais e Cache do Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.venv/
+
+# Banco de Dados Local (Não queremos subir os dados de teste)
+museu.db
+*.sqlite3
+
+# Uploads e Arquivos Gerados
+# Ignoramos o conteúdo das pastas, mas abrimos exceção para um arquivo .gitkeep
+app/static/uploads/*
+!app/static/uploads/.gitkeep
+app/static/qrcodes/*
+!app/static/qrcodes/.gitkeep
+
+# Variáveis de Ambiente e Segredos
+.env
+
+# Configurações de IDE e Sistema Operacional
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

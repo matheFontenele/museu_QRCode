@@ -1,0 +1,29 @@
+# Git
+.git
+.gitignore
+
+# Ambientes Virtuais e Cache
+__pycache__/
+venv/
+env/
+.venv/
+
+# Banco de Dados Local (O container vai gerar o dele ou usar o volume)
+museu.db
+
+# Uploads e Arquivos Locais (Evita sobrescrever o volume mapeado)
+app/static/uploads/*
+app/static/qrcodes/*
+
+# Variáveis de Ambiente locais
+.env
+
+# IDEs e OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Arquivos do próprio Docker (Opcional, mas recomendado)
+Dockerfile
+docker-compose.yml
