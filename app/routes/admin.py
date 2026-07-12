@@ -1,7 +1,7 @@
 import os
 import shutil
 import qrcode
-from fastapi import APIRouter, Request, Depends, Form, File, UploadFile
+from fastapi import APIRouter, Request, Depends, Form, File, UploadFile, HTTPException, status
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
@@ -35,6 +35,13 @@ async def cadastrar_peca(
     videos: list[UploadFile] = File(default=[]),
     db: Session = Depends(database.get_db)
 ):  
+    
+    if len(fotos) > 6 or len(videos) > 6:
+    raise HTTPException(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        detail="Limite excedido: Você só pode enviar no máximo 6 fotos e 6 vídeos."
+    )
+    
     try:
         nova_peca = models.Peca(titulo=titulo, descricao=descricao)
         db.add(nova_peca)

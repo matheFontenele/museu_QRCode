@@ -617,10 +617,20 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Contador de fotos
+    // Contador e Trava de fotos
     if (fotosInput) {
         fotosInput.addEventListener('change', function() {
             const count = this.files.length;
+            
+            // TRAVA DE SEGURANÇA: Limite de 6 fotos
+            if (count > 6) {
+                alert('⚠️ Atenção: Você só pode selecionar no máximo 6 fotos.');
+                this.value = ''; // Limpa a seleção errada
+                fotosCounter.textContent = 'Nenhuma foto selecionada';
+                fotosCounter.classList.remove('text-success');
+                return; // Interrompe a função
+            }
+
             if (count > 0) {
                 fotosCounter.textContent = `${count} foto(s) selecionada(s)`;
                 fotosCounter.classList.add('text-success');
@@ -631,10 +641,20 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Contador de vídeos
+    // Contador e Trava de vídeos
     if (videosInput) {
         videosInput.addEventListener('change', function() {
             const count = this.files.length;
+
+            // TRAVA DE SEGURANÇA: Limite de 6 vídeos
+            if (count > 6) {
+                alert('⚠️ Atenção: Você só pode selecionar no máximo 6 vídeos.');
+                this.value = ''; // Limpa a seleção errada
+                videosCounter.textContent = 'Nenhum vídeo selecionado';
+                videosCounter.classList.remove('text-danger');
+                return; // Interrompe a função
+            }
+
             if (count > 0) {
                 videosCounter.textContent = `${count} vídeo(s) selecionado(s)`;
                 videosCounter.classList.add('text-danger');
