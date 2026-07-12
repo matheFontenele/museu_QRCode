@@ -37,9 +37,9 @@ async def cadastrar_peca(
 ):  
     
     if len(fotos) > 6 or len(videos) > 6:
-    raise HTTPException(
-        status_code=status.HTTP_400_BAD_REQUEST,
-        detail="Limite excedido: Você só pode enviar no máximo 6 fotos e 6 vídeos."
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Limite excedido: Você só pode enviar no máximo 6 fotos e 6 vídeos."
     )
     
     try:
