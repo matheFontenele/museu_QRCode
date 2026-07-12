@@ -4,20 +4,78 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ peca.titulo }} - Museu da Bíblia</title>
-    <!-- Adicionando o Bootstrap para um layout responsivo e elegante -->
+    
+    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
     <style>
         body { background-color: #f8f9fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        /* Cabeçalho Original mantido */
         .hero-section { background-color: #2c3e50; color: white; padding: 3rem 1rem; border-bottom: 5px solid #e74c3c; }
-        .descricao-peca { font-size: 1.1rem; line-height: 1.8; color: #444; }
-        .media-card { border: none; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s; }
-        .media-card:hover { transform: translateY(-5px); }
-        .legenda { font-size: 0.9rem; color: #666; background: #fff; padding: 12px; margin: 0; text-align: center; }
-        video { width: 100%; border-bottom: 1px solid #eee; }
+        
+        .descricao-peca { font-size: 1.1rem; line-height: 1.8; color: #444; white-space: pre-wrap; }
+        
+        /* ===== ESTILOS DO CARROSSEL (FOTOS E VÍDEOS JUNTOS) ===== */
+        .carousel-container {
+            background-color: #000; /* Fundo preto destaca as fotos e faz borda nos vídeos */
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .carousel-item {
+            height: 450px; /* Altura padrão para telas grandes */
+            background-color: #111;
+        }
+        
+        /* Ajuste das imagens para não distorcerem no mobile */
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; 
+        }
+        
+        /* Container que vai receber o Iframe do YouTube */
+        .youtube-wrapper {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .youtube-wrapper iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .legenda-carousel {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: rgba(0,0,0,0.7); /* Fundo transparente */
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        /* ===== RESPONSIVIDADE PARA CELULAR ===== */
+        @media (max-width: 768px) {
+            .carousel-item { 
+                height: 300px; /* Reduz a altura do carrossel no celular */
+            }
+            .hero-section { 
+                padding: 2rem 1rem; 
+            }
+        }
     </style>
 </head>
 <body>
 
+    <!-- HEADER -->
     <header class="hero-section text-center shadow-sm">
         <div class="container">
             <h1 class="display-5 fw-bold">{{ peca.titulo }}</h1>
@@ -25,55 +83,125 @@
         </div>
     </header>
 
-    <main class="container py-5">
-        <section class="row justify-content-center mb-5">
-            <div class="col-lg-8 text-center">
-                <p class="descricao-peca">{{ peca.descricao }}</p>
+    <main class="container py-4">
+        
+        <!-- ========== CARROSSEL DE MÍDIAS ========== -->
+        {% if peca.midias and peca.midias|length > 0 %}
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="carousel-container">
+                    <!-- id="midiasCarousel" será usado para controlar a passagem de slides -->
+                    <div id="midiasCarousel" class="carousel slide" data-bs-ride="false">
+                        
+                        <!-- Indicadores (Bolinhas) -->
+                        <div class="carousel-indicators mb-2">
+                            {% for midia in peca.midias %}
+                                <button type="button" data-bs-target="#midiasCarousel" data-bs-slide-to="{{ loop.index0 }}" {% if loop.first %}class="active"{% endif %}></button>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Itens (Fotos e Vídeos) -->
+                        <div class="carousel-inner">
+                            {% for midia in peca.midias %}
+                                <div class="carousel-item {% if loop.first %}active{% endif %}">
+                                    
+                                    {% if midia.tipo == 'foto' %}
+                                        <img src="{{ midia.url_path }}" alt="{{ midia.legenda }}">
+                                    {% elif midia.tipo == 'video' %}
+                                        <!-- Em vez da tag <video>, usamos a div que receberá o iframe -->
+                                        <div class="youtube-wrapper" data-url="{{ midia.url_path }}">
+                                        </div>
+                                    {% endif %}
+                                    
+                                    {% if midia.legenda %}
+                                    <div class="legenda-carousel">
+                                        {{ midia.legenda }}
+                                    </div>
+                                    {% endif %}
+
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Botões Laterais (Só aparecem se houver mais de 1 mídia) -->
+                        {% if peca.midias|length > 1 %}
+                        <button class="carousel-control-prev" type="button" data-bs-target="#midiasCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
+                            <span class="visually-hidden">Anterior</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#midiasCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
+                            <span class="visually-hidden">Próximo</span>
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- ========== DESCRIÇÃO DA PEÇA ========== -->
+        <section class="row justify-content-center mt-4">
+            <div class="col-lg-10 bg-white p-4 p-md-5 rounded-4 shadow-sm border">
+                <h3 class="mb-4 border-bottom pb-2">História do Item</h3>
+                <p class="descricao-peca mb-0">{{ peca.descricao }}</p>
             </div>
         </section>
 
-        <section class="mb-5">
-            <h3 class="mb-4 border-bottom pb-2">Galeria de Fotos</h3>
-            <div class="row g-4">
-                {% for midia in peca.midias %}
-                    {% if midia.tipo == 'foto' %}
-                    <div class="col-md-6 col-lg-4">
-                        <div class="media-card h-100 bg-white">
-                            <!-- A imagem é formatada para manter a proporção sem distorcer -->
-                            <img src="{{ midia.url_path }}" alt="Foto da peça" class="img-fluid w-100" style="height: 250px; object-fit: cover;">
-                            <p class="legenda">{{ midia.legenda }}</p>
-                        </div>
-                    </div>
-                    {% endif %}
-                {% endfor %}
-            </div>
-        </section>
-
-        <section>
-            <h3 class="mb-4 border-bottom pb-2">Material em Vídeo</h3>
-            <div class="row g-4">
-                {% for midia in peca.midias %}
-                    {% if midia.tipo == 'video' %}
-                    <div class="col-md-6">
-                        <div class="media-card bg-white">
-                            <!-- preload="metadata" economiza a banda do servidor (não baixa o vídeo todo até dar play) -->
-                            <video controls preload="metadata">
-                                <source src="{{ midia.url_path }}" type="video/mp4">
-                                Seu navegador não suporta a tag de vídeo.
-                            </video>
-                            <p class="legenda">{{ midia.legenda }}</p>
-                        </div>
-                    </div>
-                    {% endif %}
-                {% endfor %}
-            </div>
-        </section>
     </main>
 
+    <!-- FOOTER -->
     <footer class="text-center py-4 text-muted mt-5 bg-white border-top">
         <small>&copy; Museu da Bíblia - Escaneie mais QR Codes pelo museu para descobrir a história!</small>
     </footer>
 
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- ========== SCRIPT DO YOUTUBE ========== -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // 1. Lógica para Injetar o Player do YouTube
+            const youtubeWrappers = document.querySelectorAll('.youtube-wrapper');
+            
+            youtubeWrappers.forEach(wrapper => {
+                const url = wrapper.getAttribute('data-url');
+                const videoId = extrairIdYouTube(url);
+                
+                if (videoId) {
+                    wrapper.innerHTML = `
+                        <iframe 
+                            src="https://www.youtube.com/embed/${videoId}?rel=0" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                        </iframe>
+                    `;
+                } else {
+                    wrapper.innerHTML = `<div class="text-white text-center p-4">⚠️ Link de vídeo inválido.</div>`;
+                }
+            });
+
+            // 2. Lógica para PAUSAR o vídeo ao arrastar o carrossel (Importante no Mobile)
+            const myCarousel = document.getElementById('midiasCarousel');
+            if (myCarousel) {
+                myCarousel.addEventListener('slide.bs.carousel', function () {
+                    const iframes = document.querySelectorAll('.youtube-wrapper iframe');
+                    iframes.forEach(iframe => {
+                        const src = iframe.src;
+                        iframe.src = src; // Isso recarrega o iframe e corta o áudio/vídeo imediatamente
+                    });
+                });
+            }
+        });
+
+        // Regex que captura o ID do vídeo de qualquer formato de link do YouTube
+        function extrairIdYouTube(url) {
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
+    </script>
 </body>
 </html>

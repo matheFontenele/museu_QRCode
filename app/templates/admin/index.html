@@ -189,14 +189,7 @@
             padding: 0.5rem 0.75rem;
             border-radius: 6px;
             font-size: 0.85rem;
-            font-weight: 500;
-        }
-        
-        .badge-erro {
-            background-color: #dc3545;
-            padding: 0.5rem 0.75rem;
-            border-radius: 6px;
-            font-size: 0.85rem;
+            color: white;
             font-weight: 500;
         }
         
@@ -286,7 +279,7 @@
         .text-truncate-2 {
             display: -webkit-box;
             -webkit-line-clamp: 2;
-            line-clamp: 2; /* <-- Adicione esta linha */
+            line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
@@ -297,45 +290,18 @@
         
         /* ========== RESPONSIVO ========== */
         @media (max-width: 768px) {
-            main {
-                padding: 1rem;
-            }
-            
-            .page-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .page-header h1 {
-                font-size: 1.5rem;
-            }
-            
-            .table {
-                font-size: 0.85rem;
-            }
-            
-            .qr-code-img {
-                width: 60px;
-                height: 60px;
-            }
-            
-            .btn-sm {
-                display: block;
-                width: 100%;
-                margin-top: 0.5rem;
-            }
+            main { padding: 1rem; }
+            .page-header { flex-direction: column; align-items: flex-start; }
+            .page-header h1 { font-size: 1.5rem; }
+            .table { font-size: 0.85rem; }
+            .qr-code-img { width: 60px; height: 60px; }
+            .btn-sm { display: block; width: 100%; margin-top: 0.5rem; }
         }
         
         /* ========== ANIMAÇÕES ========== */
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .fade-in {
@@ -343,13 +309,8 @@
         }
         
         /* ========== UTILITIES ========== */
-        .cursor-pointer {
-            cursor: pointer;
-        }
-        
-        .transition-smooth {
-            transition: all 0.3s ease;
-        }
+        .cursor-pointer { cursor: pointer; }
+        .transition-smooth { transition: all 0.3s ease; }
     </style>
 </head>
 <body>
@@ -413,35 +374,19 @@
                                 <!-- COLUNA: QR CODE -->
                                 <td class="qr-code-container">
                                     {% if peca.qr_code_path %}
-                                        <!-- QR Code renderizado com sucesso -->
-                                        <a href="{{ peca.qr_code_path }}" 
-                                           target="_blank" 
-                                           rel="noopener noreferrer"
-                                           title="Clique para abrir o QR Code em tamanho grande (nova aba)" 
-                                           class="d-inline-block cursor-pointer">
-                                            <img src="{{ peca.qr_code_path }}?v={{ peca.id }}" 
-                                                 alt="QR Code da peça {{ peca.id }}: {{ peca.titulo }}" 
-                                                 class="qr-code-img border rounded" 
-                                                 loading="lazy"
-                                                 onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0...';">
+                                        <a href="{{ peca.qr_code_path }}" target="_blank" rel="noopener noreferrer" class="d-inline-block cursor-pointer">
+                                            <img src="{{ peca.qr_code_path }}?v={{ peca.id }}" alt="QR Code da peça {{ peca.id }}" class="qr-code-img border rounded" loading="lazy">
                                         </a>
                                     {% else %}
-                                        <!-- QR Code ainda não foi gerado -->
-                                        <span class="badge badge-pendente" title="O QR Code ainda será gerado">
-                                            ⏳ Pendente
-                                        </span>
+                                        <span class="badge badge-pendente">⏳ Pendente</span>
                                     {% endif %}
                                 </td>
                                 
                                 <!-- COLUNA: TÍTULO E DESCRIÇÃO -->
                                 <td>
-                                    <div class="fw-bold" title="{{ peca.titulo }}">
-                                        {{ peca.titulo }}
-                                    </div>
+                                    <div class="fw-bold">{{ peca.titulo }}</div>
                                     {% if peca.descricao %}
-                                        <small class="text-muted text-truncate-2" title="{{ peca.descricao }}">
-                                            {{ peca.descricao[:80] }}{% if peca.descricao|length > 80 %}...{% endif %}
-                                        </small>
+                                        <small class="text-muted text-truncate-2">{{ peca.descricao[:80] }}{% if peca.descricao|length > 80 %}...{% endif %}</small>
                                     {% else %}
                                         <small class="text-muted fst-italic">Sem descrição</small>
                                     {% endif %}
@@ -450,25 +395,25 @@
                                 <!-- COLUNA: MÍDIAS -->
                                 <td>
                                     {% if peca.midias and peca.midias|length > 0 %}
-                                        <span class="badge bg-success cursor-pointer" title="{{ peca.midias|length }} arquivo(s) associado(s)">
-                                            📁 {{ peca.midias|length }} arquivo(s)
-                                        </span>
+                                        <span class="badge bg-success cursor-pointer">📁 {{ peca.midias|length }} arquivo(s)</span>
                                     {% else %}
-                                        <span class="badge bg-secondary" title="Nenhuma mídia associada">
-                                            Nenhuma mídia
-                                        </span>
+                                        <span class="badge bg-secondary">Nenhuma mídia</span>
                                     {% endif %}
                                 </td>
                                 
                                 <!-- COLUNA: AÇÕES -->
                                 <td>
-                                    <a href="/peca/{{ peca.id }}" 
-                                       target="_blank" 
-                                       rel="noopener noreferrer"
-                                       class="btn btn-sm btn-outline-success" 
-                                       title="Abrir página de visualização como visitante (nova aba)">
-                                         Ver Visitante
-                                    </a>
+                                    <div class="d-flex gap-2">
+                                        <a href="/peca/{{ peca.id }}" target="_blank" class="btn btn-sm btn-outline-success" title="Ver Visitante">
+                                            Ver Peça
+                                        </a>
+                                        <button class="btn btn-sm btn-outline-warning" data-bs-toggle="modal" data-bs-target="#editarModal{{ peca.id }}" title="Editar Peça">
+                                            Editar Peça
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deletarModal{{ peca.id }}" title="Excluir Peça">
+                                            Excluir Peça
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                             {% else %}
@@ -488,6 +433,60 @@
             </div>
 
         </main>
+
+        <!-- ========== MODAIS DE EDIÇÃO E EXCLUSÃO (GERADOS PARA CADA PEÇA) ========== -->
+        {% for peca in pecas %}
+        <!-- MODAL DE EDITAR -->
+        <div class="modal fade" id="editarModal{{ peca.id }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-warning text-dark" style="border-radius: 12px 12px 0 0;">
+                        <h5 class="modal-title">✏️ Editar: {{ peca.titulo }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    </div>
+                    <form action="/admin/editar/{{ peca.id }}" method="POST">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label">📛 Título do Item</label>
+                                <input type="text" class="form-control" name="titulo" value="{{ peca.titulo }}" required maxlength="150">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">📝 Descrição</label>
+                                <textarea class="form-control" name="descricao" rows="5" required maxlength="1000">{{ peca.descricao }}</textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer bg-light">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-warning fw-bold">💾 Salvar Alterações</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL DE DELETAR -->
+        <div class="modal fade" id="deletarModal{{ peca.id }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-danger text-white" style="border-radius: 12px 12px 0 0;">
+                        <h5 class="modal-title">🗑️ Excluir Item Permanentemente</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    </div>
+                    <form action="/admin/deletar/{{ peca.id }}" method="POST">
+                        <div class="modal-body text-center py-4">
+                            <h1 class="display-4 text-danger mb-3">⚠️</h1>
+                            <p class="fs-5">Tem certeza que deseja excluir a peça <br><strong>"{{ peca.titulo }}"</strong>?</p>
+                            <p class="text-muted small">Esta ação apagará o item do banco de dados e não poderá ser desfeita.</p>
+                        </div>
+                        <div class="modal-footer bg-light justify-content-center">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-danger fw-bold">Sim, Excluir Item</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
     </div>
 </div>
 
@@ -538,36 +537,26 @@
 
             <hr class="my-4">
             
-            <!-- CAMPO: Fotos -->
-            <div class="mb-3">
-                <label for="fotos" class="form-label text-success">📸 Fotos do Item</label>
-                <input class="form-control" 
-                       type="file" 
-                       id="fotos" 
-                       name="fotos" 
-                       multiple 
-                       accept="image/jpeg,image/png,image/gif,image/webp"
-                       aria-label="Selecionar fotos do item">
-                <div class="form-text">
-                    Selecione até 6 arquivos. Formatos aceitos: JPG, PNG, GIF, WebP. Máximo 50MB por arquivo.
+            <!-- CAMPOS DINÂMICOS: FOTOS -->
+            <div class="mb-4">
+                <label class="form-label text-success fw-bold">📸 Fotos do Item (Máximo 6)</label>
+                <div id="container-fotos">
+                    <!-- Os campos de arquivo aparecerão aqui -->
                 </div>
-                <small id="fotosCounter" class="text-muted d-block mt-2">Nenhuma foto selecionada</small>
+                <button type="button" class="btn btn-sm btn-outline-success mt-2 fw-bold" id="btn-add-foto">
+                    + Adicionar Foto
+                </button>
             </div>
 
-            <!-- CAMPO: Vídeos -->
+            <!-- CAMPOS DINÂMICOS: VÍDEOS -->
             <div class="mb-3">
-                <label for="videos" class="form-label text-danger">🎥 Vídeos Complementares</label>
-                <input class="form-control" 
-                       type="file" 
-                       id="videos" 
-                       name="videos" 
-                       multiple 
-                       accept="video/mp4,video/webm,video/ogg"
-                       aria-label="Selecionar vídeos do item">
-                <div class="form-text">
-                    Selecione até 6 arquivos. Formatos aceitos: MP4, WebM, Ogg. Máximo 500MB por arquivo.
+                <label class="form-label text-danger fw-bold">📺 Links do YouTube (Máximo 6)</label>
+                <div id="container-videos">
+                    <!-- Os campos de texto aparecerão aqui -->
                 </div>
-                <small id="videosCounter" class="text-muted d-block mt-2">Nenhum vídeo selecionado</small>
+                <button type="button" class="btn btn-sm btn-outline-danger mt-2 fw-bold" id="btn-add-video">
+                    + Adicionar Link
+                </button>
             </div>
 
           </div>
@@ -591,13 +580,9 @@
 <!-- ========== SCRIPTS CUSTOMIZADOS ========== -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // ========== VALIDAÇÃO DO FORMULÁRIO ==========
+    // ========== VALIDAÇÃO E CONTADOR DO FORMULÁRIO ==========
     const formCadastro = document.getElementById('formCadastro');
     const descricaoInput = document.getElementById('descricao');
-    const fotosInput = document.getElementById('fotos');
-    const videosInput = document.getElementById('videos');
-    const fotosCounter = document.getElementById('fotosCounter');
-    const videosCounter = document.getElementById('videosCounter');
     const descricaoCounter = document.getElementById('descricaoCounter');
     const submitBtn = formCadastro.querySelector('button[type="submit"]');
     
@@ -617,55 +602,51 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Contador e Trava de fotos
-    if (fotosInput) {
-        fotosInput.addEventListener('change', function() {
-            const count = this.files.length;
-            
-            // TRAVA DE SEGURANÇA: Limite de 6 fotos
-            if (count > 6) {
-                alert('⚠️ Atenção: Você só pode selecionar no máximo 6 fotos.');
-                this.value = ''; // Limpa a seleção errada
-                fotosCounter.textContent = 'Nenhuma foto selecionada';
-                fotosCounter.classList.remove('text-success');
-                return; // Interrompe a função
-            }
-
-            if (count > 0) {
-                fotosCounter.textContent = `${count} foto(s) selecionada(s)`;
-                fotosCounter.classList.add('text-success');
-            } else {
-                fotosCounter.textContent = 'Nenhuma foto selecionada';
-                fotosCounter.classList.remove('text-success');
-            }
-        });
-    }
+    // ========== LÓGICA DOS CAMPOS DINÂMICOS (FOTOS E VÍDEOS UNITÁRIOS) ==========
+    const containerFotos = document.getElementById('container-fotos');
+    const btnAddFoto = document.getElementById('btn-add-foto');
     
-    // Contador e Trava de vídeos
-    if (videosInput) {
-        videosInput.addEventListener('change', function() {
-            const count = this.files.length;
+    const containerVideos = document.getElementById('container-videos');
+    const btnAddVideo = document.getElementById('btn-add-video');
 
-            // TRAVA DE SEGURANÇA: Limite de 6 vídeos
-            if (count > 6) {
-                alert('⚠️ Atenção: Você só pode selecionar no máximo 6 vídeos.');
-                this.value = ''; // Limpa a seleção errada
-                videosCounter.textContent = 'Nenhum vídeo selecionado';
-                videosCounter.classList.remove('text-danger');
-                return; // Interrompe a função
-            }
-
-            if (count > 0) {
-                videosCounter.textContent = `${count} vídeo(s) selecionado(s)`;
-                videosCounter.classList.add('text-danger');
-            } else {
-                videosCounter.textContent = 'Nenhum vídeo selecionado';
-                videosCounter.classList.remove('text-danger');
-            }
-        });
+    function checkLimits() {
+        btnAddFoto.style.display = containerFotos.children.length >= 6 ? 'none' : 'inline-block';
+        btnAddVideo.style.display = containerVideos.children.length >= 6 ? 'none' : 'inline-block';
     }
-    
-    // Validação do formulário antes de enviar
+
+    function createFotoField() {
+        if (containerFotos.children.length >= 6) return;
+        const div = document.createElement('div');
+        div.className = 'input-group mb-2 fade-in';
+        div.innerHTML = `
+            <input type="file" name="fotos" class="form-control" accept="image/jpeg,image/png,image/gif,image/webp">
+            <button type="button" class="btn btn-outline-secondary" onclick="this.parentElement.remove(); checkLimits();" title="Remover foto">🗑️</button>
+        `;
+        containerFotos.appendChild(div);
+        checkLimits();
+    }
+
+    function createVideoField() {
+        if (containerVideos.children.length >= 6) return;
+        const div = document.createElement('div');
+        div.className = 'input-group mb-2 fade-in';
+        div.innerHTML = `
+            <span class="input-group-text bg-light">🔗</span>
+            <input type="url" name="youtube_links" class="form-control" placeholder="https://www.youtube.com/watch?v=...">
+            <button type="button" class="btn btn-outline-secondary" onclick="this.parentElement.remove(); checkLimits();" title="Remover link">🗑️</button>
+        `;
+        containerVideos.appendChild(div);
+        checkLimits();
+    }
+
+    btnAddFoto.addEventListener('click', createFotoField);
+    btnAddVideo.addEventListener('click', createVideoField);
+
+    // Inicia com um campo de cada vazio
+    createFotoField();
+    createVideoField();
+
+    // ========== VALIDAÇÃO FINAL ANTES DE ENVIAR ==========
     if (formCadastro) {
         formCadastro.addEventListener('submit', function(event) {
             const titulo = document.getElementById('titulo').value.trim();
@@ -706,12 +687,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 spinner.style.display = 'inline-block';
             }
             submitBtn.disabled = true;
-            
-            console.log('✅ Formulário validado, enviando...');
         });
     }
     
-    // Fecha o modal automaticamente após sucesso (será necessário ajustar no backend)
+    // Fecha o modal e limpa tudo para uma próxima inserção limpa
     const cadastrarModal = document.getElementById('cadastrarModal');
     if (cadastrarModal) {
         cadastrarModal.addEventListener('hidden.bs.modal', function() {
@@ -722,12 +701,24 @@ document.addEventListener('DOMContentLoaded', function() {
             if (spinner) {
                 spinner.style.display = 'none';
             }
+            
+            // Reseta os campos dinâmicos
+            containerFotos.innerHTML = '';
+            containerVideos.innerHTML = '';
+            createFotoField();
+            createVideoField();
+            
+            // Reseta o contador de caracteres
+            if(descricaoCounter) {
+                descricaoCounter.textContent = '0 / 1000 caracteres';
+                descricaoCounter.classList.remove('text-warning');
+                descricaoCounter.classList.add('text-muted');
+            }
         });
     }
 });
 
-// Logging para debugging
-console.log('✅ Scripts do painel admin carregados com sucesso');
+console.log('✅ Scripts do painel admin atualizados com inputs dinâmicos.');
 </script>
 
 </body>
