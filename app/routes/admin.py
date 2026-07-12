@@ -30,6 +30,7 @@ def painel_admin(request: Request, db: Session = Depends(database.get_db)):
 # ====== ROTA: CADASTRAR PEÇA ======
 @router.post("/cadastrar")
 async def cadastrar_peca(
+    request: Request,
     titulo: str = Form(...),
     descricao: str = Form(...),
     fotos: list[UploadFile] = File(default=[]),
@@ -52,7 +53,8 @@ async def cadastrar_peca(
         db.add(nova_peca)
         db.commit()
         db.refresh(nova_peca)
-        url_publica = f"http://localhost:8000/peca/{nova_peca.id}"        
+        base_url = str(request.base_url).rstrip("/")
+        url_publica = f"{base_url}/peca/{nova_peca.id}"        
         qr = qrcode.make(url_publica)
         qr_filename = f"qr_peca_{nova_peca.id}.png"
         qr_path_full = os.path.join(QRCODES_DIR, qr_filename)
