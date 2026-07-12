@@ -23,9 +23,7 @@
             --danger-color: #dc3545;
         }
         
-        * {
-            scroll-behavior: smooth;
-        }
+        * { scroll-behavior: smooth; }
         
         body {
             background-color: var(--secondary-color);
@@ -69,9 +67,7 @@
         }
         
         /* ========== CONTEÚDO PRINCIPAL ========== */
-        main {
-            padding: 2rem;
-        }
+        main { padding: 2rem; }
         
         .page-header {
             display: flex;
@@ -97,20 +93,9 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
         
-        .alert-info {
-            background-color: #e7f3ff;
-            color: #0066cc;
-        }
-        
-        .alert-warning {
-            background-color: #fff4e6;
-            color: #cc7700;
-        }
-        
-        .alert-success {
-            background-color: #e6f9e6;
-            color: #00aa00;
-        }
+        .alert-info { background-color: #e7f3ff; color: #0066cc; }
+        .alert-warning { background-color: #fff4e6; color: #cc7700; }
+        .alert-success { background-color: #e6f9e6; color: #00aa00; }
         
         /* ========== CARD ========== */
         .card {
@@ -120,19 +105,11 @@
             transition: box-shadow 0.3s ease;
         }
         
-        .card:hover {
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
-        }
+        .card:hover { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12); }
         
         /* ========== TABELA ========== */
-        .table {
-            margin-bottom: 0;
-        }
-        
-        .table thead {
-            background-color: #f8f9fa;
-            border-bottom: 2px solid #dee2e6;
-        }
+        .table { margin-bottom: 0; }
+        .table thead { background-color: #f8f9fa; border-bottom: 2px solid #dee2e6; }
         
         .table th {
             font-weight: 700;
@@ -149,13 +126,8 @@
             border-bottom: 1px solid #e9ecef;
         }
         
-        .table tbody tr {
-            transition: background-color 0.2s ease;
-        }
-        
-        .table tbody tr:hover {
-            background-color: rgba(30, 43, 60, 0.02);
-        }
+        .table tbody tr { transition: background-color 0.2s ease; }
+        .table tbody tr:hover { background-color: rgba(30, 43, 60, 0.02); }
         
         /* ========== QR CODE ========== */
         .qr-code-container {
@@ -180,9 +152,7 @@
             filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
         }
         
-        .qr-code-img:active {
-            transform: scale(1.1);
-        }
+        .qr-code-img:active { transform: scale(1.1); }
         
         .badge-pendente {
             background-color: #6c757d;
@@ -193,102 +163,26 @@
             font-weight: 500;
         }
         
-        /* ========== BADGES ========== */
-        .badge {
-            padding: 0.5rem 0.75rem;
-            border-radius: 6px;
-            font-weight: 500;
-            font-size: 0.85rem;
-        }
-        
-        /* ========== BOTÕES ========== */
-        .btn {
-            border-radius: 8px;
-            font-weight: 600;
-            padding: 0.5rem 1rem;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-primary {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-        }
-        
-        .btn-primary:hover {
-            background-color: #152038;
-            border-color: #152038;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(30, 43, 60, 0.3);
-        }
-        
-        .btn-outline-success:hover {
-            transform: translateY(-2px);
-        }
-        
-        .btn-sm {
-            padding: 0.35rem 0.75rem;
-            font-size: 0.8rem;
-        }
+        /* ========== BADGES & BOTÕES ========== */
+        .badge { padding: 0.5rem 0.75rem; border-radius: 6px; font-weight: 500; font-size: 0.85rem; }
+        .btn { border-radius: 8px; font-weight: 600; padding: 0.5rem 1rem; transition: all 0.3s ease; }
+        .btn-primary { background-color: var(--primary-color); border-color: var(--primary-color); }
+        .btn-primary:hover { background-color: #152038; border-color: #152038; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(30, 43, 60, 0.3); }
+        .btn-outline-success:hover { transform: translateY(-2px); }
+        .btn-sm { padding: 0.35rem 0.75rem; font-size: 0.8rem; }
         
         /* ========== MODAL ========== */
-        .modal-header {
-            background: linear-gradient(90deg, var(--primary-color), #2a3f5f);
-            border-bottom: none;
-            border-radius: 12px 12px 0 0;
-        }
+        .modal-header { background: linear-gradient(90deg, var(--primary-color), #2a3f5f); border-bottom: none; border-radius: 12px 12px 0 0; }
+        .modal-content { border: none; border-radius: 12px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2); }
+        .modal-body { padding: 2rem; }
+        .form-label { color: var(--primary-color); margin-bottom: 0.5rem; font-weight: 600; }
+        .form-control, .form-select, textarea { border: 1px solid #e0e0e0; border-radius: 8px; padding: 0.75rem; transition: all 0.3s ease; }
+        .form-control:focus, .form-select:focus, textarea:focus { border-color: var(--primary-color); box-shadow: 0 0 0 0.2rem rgba(30, 43, 60, 0.25); }
+        .form-text { color: #6c757d; font-size: 0.85rem; margin-top: 0.25rem; }
         
-        .modal-content {
-            border: none;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-        }
-        
-        .modal-body {
-            padding: 2rem;
-        }
-        
-        .form-label {
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-        }
-        
-        .form-control,
-        .form-select,
-        textarea {
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 0.75rem;
-            transition: all 0.3s ease;
-        }
-        
-        .form-control:focus,
-        .form-select:focus,
-        textarea:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.2rem rgba(30, 43, 60, 0.25);
-        }
-        
-        .form-text {
-            color: #6c757d;
-            font-size: 0.85rem;
-            margin-top: 0.25rem;
-        }
-        
-        /* ========== FEEDBACK VISUAL ========== */
-        .text-truncate-2 {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-                
-        .loading-spinner {
-            display: none;
-        }
-        
-        /* ========== RESPONSIVO ========== */
+        /* ========== UTILITIES ========== */
+        .text-truncate-2 { display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .loading-spinner { display: none; }
         @media (max-width: 768px) {
             main { padding: 1rem; }
             .page-header { flex-direction: column; align-items: flex-start; }
@@ -297,20 +191,9 @@
             .qr-code-img { width: 60px; height: 60px; }
             .btn-sm { display: block; width: 100%; margin-top: 0.5rem; }
         }
-        
-        /* ========== ANIMAÇÕES ========== */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .fade-in {
-            animation: fadeIn 0.3s ease-out;
-        }
-        
-        /* ========== UTILITIES ========== */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { animation: fadeIn 0.3s ease-out; }
         .cursor-pointer { cursor: pointer; }
-        .transition-smooth { transition: all 0.3s ease; }
     </style>
 </head>
 <body>
@@ -340,6 +223,18 @@
                     ➕ Novo Item
                 </button>
             </div>
+
+            <!-- ALERTA DE ERRO (Vindo do Backend se exceder o limite nas edições) -->
+            {% if request.query_params.get('erro') %}
+            <div class="alert alert-danger alert-dismissible fade show fade-in shadow-sm" role="alert">
+                <strong>⚠️ Ação bloqueada:</strong> {{ request.query_params.get('erro') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar alerta"></button>
+            </div>
+            <script>
+                // Limpa a URL silenciosamente para o erro não reaparecer se o usuário der um F5
+                window.history.replaceState({}, document.title, "/admin");
+            </script>
+            {% endif %}
 
             <!-- ALERTA: Nenhuma peça cadastrada -->
             {% if not pecas %}
@@ -417,7 +312,6 @@
                                 </td>
                             </tr>
                             {% else %}
-                            <!-- Linha quando não há peças -->
                             <tr>
                                 <td colspan="5" class="text-center text-muted py-5">
                                     <div style="font-size: 2rem; margin-bottom: 1rem;">📭</div>
@@ -444,16 +338,66 @@
                         <h5 class="modal-title">✏️ Editar: {{ peca.titulo }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                     </div>
-                    <form action="/admin/editar/{{ peca.id }}" method="POST">
+                    
+                    <form action="/admin/editar/{{ peca.id }}" method="POST" enctype="multipart/form-data" id="formEditar{{ peca.id }}">
                         <div class="modal-body">
+                            
+                            <!-- Edição de Textos -->
                             <div class="mb-3">
-                                <label class="form-label">📛 Título do Item</label>
+                                <label class="form-label fw-bold">📛 Título do Item</label>
                                 <input type="text" class="form-control" name="titulo" value="{{ peca.titulo }}" required maxlength="150">
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">📝 Descrição</label>
-                                <textarea class="form-control" name="descricao" rows="5" required maxlength="1000">{{ peca.descricao }}</textarea>
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">📝 Descrição</label>
+                                <textarea class="form-control" name="descricao" rows="4" required maxlength="1000">{{ peca.descricao }}</textarea>
                             </div>
+
+                            <hr class="my-4">
+
+                            <!-- Gestão de Mídias Atuais -->
+                            <h6 class="fw-bold text-secondary mb-3">🛠️ Mídias Atuais (Selecione para excluir)</h6>
+                            {% if peca.midias and peca.midias|length > 0 %}
+                                <div class="d-flex flex-wrap gap-3 p-3 bg-light border rounded mb-4">
+                                    {% for midia in peca.midias %}
+                                        <div class="card p-2 border-0 shadow-sm text-center midia-card-atual" style="width: 110px;" data-tipo="{{ midia.tipo }}" data-midia-id="{{ midia.id }}">
+                                            {% if midia.tipo == 'foto' %}
+                                                <img src="{{ midia.url_path }}" class="rounded mb-2" style="height: 70px; object-fit: cover; width: 100%;">
+                                            {% else %}
+                                                <div class="bg-dark text-white rounded d-flex align-items-center justify-content-center mb-2" style="height: 70px; width: 100%; font-size: 1.5rem;">🔗</div>
+                                            {% endif %}
+                                            
+                                            <!-- Checkbox de Exclusão -->
+                                            <div class="form-check d-flex justify-content-center m-0">
+                                                <input class="form-check-input border-danger me-1 cursor-pointer check-excluir" type="checkbox" name="midias_para_excluir" value="{{ midia.id }}" id="del_midia_{{ peca.id }}_{{ midia.id }}">
+                                                <label class="form-check-label text-danger small cursor-pointer fw-bold" for="del_midia_{{ peca.id }}_{{ midia.id }}">Apagar</label>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="alert alert-secondary py-2 small">Nenhuma mídia vinculada a este item ainda.</div>
+                            {% endif %}
+
+                            <!-- Adição de Novas Mídias dinâmicas -->
+                            <h6 class="fw-bold text-primary mb-3">➕ Adicionar Novas Mídias</h6>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label text-success small fw-bold">Novas Fotos</label>
+                                    <div id="container-fotos-edit-{{ peca.id }}"></div>
+                                    <button type="button" class="btn btn-sm btn-outline-success mt-2 fw-bold btn-add-foto-edit" data-peca-id="{{ peca.id }}">
+                                        + Adicionar Foto
+                                    </button>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label text-danger small fw-bold">Novos Links (YouTube)</label>
+                                    <div id="container-videos-edit-{{ peca.id }}"></div>
+                                    <button type="button" class="btn btn-sm btn-outline-danger mt-2 fw-bold btn-add-video-edit" data-peca-id="{{ peca.id }}">
+                                        + Adicionar Link
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="form-text text-muted small">Lembre-se: O total de fotos e vídeos (Atuais - Apagados + Novos) não pode exceder 6 de cada.</div>
+
                         </div>
                         <div class="modal-footer bg-light">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -507,31 +451,15 @@
             <!-- CAMPO: Título -->
             <div class="mb-3">
                 <label for="titulo" class="form-label">📛 Nome / Título do Item</label>
-                <input type="text" 
-                       class="form-control" 
-                       id="titulo" 
-                       name="titulo" 
-                       maxlength="150" 
-                       required 
-                       aria-required="true"
-                       placeholder="Ex: Rolo de Isaías (Cópia)">
+                <input type="text" class="form-control" id="titulo" name="titulo" maxlength="150" required aria-required="true" placeholder="Ex: Rolo de Isaías (Cópia)">
                 <div class="form-text">Máximo 150 caracteres. Campo obrigatório.</div>
             </div>
             
             <!-- CAMPO: Descrição -->
             <div class="mb-3">
                 <label for="descricao" class="form-label">📝 Texto Explicativo</label>
-                <textarea class="form-control" 
-                          id="descricao" 
-                          name="descricao" 
-                          rows="5" 
-                          maxlength="1000" 
-                          required
-                          aria-required="true"
-                          placeholder="Conte a história deste item..."></textarea>
-                <div class="form-text">
-                    Máximo 1000 caracteres. Este é o texto que o visitante lerá ao escanear o QR Code. Campo obrigatório.
-                </div>
+                <textarea class="form-control" id="descricao" name="descricao" rows="5" maxlength="1000" required aria-required="true" placeholder="Conte a história deste item..."></textarea>
+                <div class="form-text">Máximo 1000 caracteres. Este é o texto que o visitante lerá ao escanear o QR Code. Campo obrigatório.</div>
                 <small id="descricaoCounter" class="text-muted d-block mt-2">0 / 1000 caracteres</small>
             </div>
 
@@ -540,9 +468,7 @@
             <!-- CAMPOS DINÂMICOS: FOTOS -->
             <div class="mb-4">
                 <label class="form-label text-success fw-bold">📸 Fotos do Item (Máximo 6)</label>
-                <div id="container-fotos">
-                    <!-- Os campos de arquivo aparecerão aqui -->
-                </div>
+                <div id="container-fotos"></div>
                 <button type="button" class="btn btn-sm btn-outline-success mt-2 fw-bold" id="btn-add-foto">
                     + Adicionar Foto
                 </button>
@@ -551,9 +477,7 @@
             <!-- CAMPOS DINÂMICOS: VÍDEOS -->
             <div class="mb-3">
                 <label class="form-label text-danger fw-bold">📺 Links do YouTube (Máximo 6)</label>
-                <div id="container-videos">
-                    <!-- Os campos de texto aparecerão aqui -->
-                </div>
+                <div id="container-videos"></div>
                 <button type="button" class="btn btn-sm btn-outline-danger mt-2 fw-bold" id="btn-add-video">
                     + Adicionar Link
                 </button>
@@ -580,18 +504,16 @@
 <!-- ========== SCRIPTS CUSTOMIZADOS ========== -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // ========== VALIDAÇÃO E CONTADOR DO FORMULÁRIO ==========
+    // ========== 1. CADASTRO: LÓGICA E VALIDAÇÃO ==========
     const formCadastro = document.getElementById('formCadastro');
     const descricaoInput = document.getElementById('descricao');
     const descricaoCounter = document.getElementById('descricaoCounter');
-    const submitBtn = formCadastro.querySelector('button[type="submit"]');
+    const submitBtn = formCadastro ? formCadastro.querySelector('button[type="submit"]') : null;
     
-    // Contador de descrição em tempo real
     if (descricaoInput) {
         descricaoInput.addEventListener('input', function() {
             const count = this.value.length;
             descricaoCounter.textContent = `${count} / 1000 caracteres`;
-            
             if (count > 900) {
                 descricaoCounter.classList.remove('text-muted');
                 descricaoCounter.classList.add('text-warning');
@@ -602,113 +524,84 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // ========== LÓGICA DOS CAMPOS DINÂMICOS (FOTOS E VÍDEOS UNITÁRIOS) ==========
     const containerFotos = document.getElementById('container-fotos');
     const btnAddFoto = document.getElementById('btn-add-foto');
-    
     const containerVideos = document.getElementById('container-videos');
     const btnAddVideo = document.getElementById('btn-add-video');
 
-    function checkLimits() {
-        btnAddFoto.style.display = containerFotos.children.length >= 6 ? 'none' : 'inline-block';
-        btnAddVideo.style.display = containerVideos.children.length >= 6 ? 'none' : 'inline-block';
+    function checkLimitsCadastro() {
+        if(btnAddFoto) btnAddFoto.style.display = containerFotos.children.length >= 6 ? 'none' : 'inline-block';
+        if(btnAddVideo) btnAddVideo.style.display = containerVideos.children.length >= 6 ? 'none' : 'inline-block';
     }
 
-    function createFotoField() {
-        if (containerFotos.children.length >= 6) return;
+    function createFotoField(container, checkLimitsCallback) {
+        if (container.children.length >= 6) return;
         const div = document.createElement('div');
         div.className = 'input-group mb-2 fade-in';
         div.innerHTML = `
-            <input type="file" name="fotos" class="form-control" accept="image/jpeg,image/png,image/gif,image/webp">
-            <button type="button" class="btn btn-outline-secondary" onclick="this.parentElement.remove(); checkLimits();" title="Remover foto">🗑️</button>
+            <input type="file" name="${container.id === 'container-fotos' ? 'fotos' : 'novas_fotos'}" class="form-control" accept="image/jpeg,image/png,image/gif,image/webp">
+            <button type="button" class="btn btn-outline-secondary" onclick="this.parentElement.remove(); ${checkLimitsCallback.name}();" title="Remover">🗑️</button>
         `;
-        containerFotos.appendChild(div);
-        checkLimits();
+        container.appendChild(div);
+        checkLimitsCallback();
     }
 
-    function createVideoField() {
-        if (containerVideos.children.length >= 6) return;
+    function createVideoField(container, checkLimitsCallback) {
+        if (container.children.length >= 6) return;
         const div = document.createElement('div');
         div.className = 'input-group mb-2 fade-in';
         div.innerHTML = `
             <span class="input-group-text bg-light">🔗</span>
-            <input type="url" name="youtube_links" class="form-control" placeholder="https://www.youtube.com/watch?v=...">
-            <button type="button" class="btn btn-outline-secondary" onclick="this.parentElement.remove(); checkLimits();" title="Remover link">🗑️</button>
+            <input type="url" name="${container.id === 'container-videos' ? 'youtube_links' : 'novos_youtube_links'}" class="form-control" placeholder="https://www.youtube.com/watch?v=...">
+            <button type="button" class="btn btn-outline-secondary" onclick="this.parentElement.remove(); ${checkLimitsCallback.name}();" title="Remover">🗑️</button>
         `;
-        containerVideos.appendChild(div);
-        checkLimits();
+        container.appendChild(div);
+        checkLimitsCallback();
     }
 
-    btnAddFoto.addEventListener('click', createFotoField);
-    btnAddVideo.addEventListener('click', createVideoField);
+    if(btnAddFoto) btnAddFoto.addEventListener('click', () => createFotoField(containerFotos, checkLimitsCadastro));
+    if(btnAddVideo) btnAddVideo.addEventListener('click', () => createVideoField(containerVideos, checkLimitsCadastro));
 
-    // Inicia com um campo de cada vazio
-    createFotoField();
-    createVideoField();
+    // Inicia com um campo de cada vazio no cadastro
+    if(containerFotos) createFotoField(containerFotos, checkLimitsCadastro);
+    if(containerVideos) createVideoField(containerVideos, checkLimitsCadastro);
 
-    // ========== VALIDAÇÃO FINAL ANTES DE ENVIAR ==========
+    // Validação e Submit do Cadastro
     if (formCadastro) {
         formCadastro.addEventListener('submit', function(event) {
             const titulo = document.getElementById('titulo').value.trim();
             const descricao = document.getElementById('descricao').value.trim();
             
-            // Validações
-            if (!titulo) {
-                event.preventDefault();
-                alert('⚠️ Por favor, preencha o título do item.');
-                document.getElementById('titulo').focus();
-                return false;
-            }
-            
-            if (titulo.length < 3) {
+            if (!titulo || titulo.length < 3) {
                 event.preventDefault();
                 alert('⚠️ O título deve ter no mínimo 3 caracteres.');
                 document.getElementById('titulo').focus();
                 return false;
             }
-            
-            if (!descricao) {
-                event.preventDefault();
-                alert('⚠️ Por favor, preencha a descrição do item.');
-                document.getElementById('descricao').focus();
-                return false;
-            }
-            
-            if (descricao.length < 10) {
+            if (!descricao || descricao.length < 10) {
                 event.preventDefault();
                 alert('⚠️ A descrição deve ter no mínimo 10 caracteres.');
                 document.getElementById('descricao').focus();
                 return false;
             }
             
-            // Mostra spinner de loading
             const spinner = submitBtn.querySelector('.loading-spinner');
-            if (spinner) {
-                spinner.style.display = 'inline-block';
-            }
+            if (spinner) spinner.style.display = 'inline-block';
             submitBtn.disabled = true;
         });
     }
     
-    // Fecha o modal e limpa tudo para uma próxima inserção limpa
     const cadastrarModal = document.getElementById('cadastrarModal');
     if (cadastrarModal) {
         cadastrarModal.addEventListener('hidden.bs.modal', function() {
-            // Limpa o formulário quando o modal é fechado
             formCadastro.reset();
             submitBtn.disabled = false;
             const spinner = submitBtn.querySelector('.loading-spinner');
-            if (spinner) {
-                spinner.style.display = 'none';
-            }
-            
-            // Reseta os campos dinâmicos
+            if (spinner) spinner.style.display = 'none';
             containerFotos.innerHTML = '';
             containerVideos.innerHTML = '';
-            createFotoField();
-            createVideoField();
-            
-            // Reseta o contador de caracteres
+            createFotoField(containerFotos, checkLimitsCadastro);
+            createVideoField(containerVideos, checkLimitsCadastro);
             if(descricaoCounter) {
                 descricaoCounter.textContent = '0 / 1000 caracteres';
                 descricaoCounter.classList.remove('text-warning');
@@ -716,9 +609,66 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    // ========== 2. EDIÇÃO: LÓGICA DOS CAMPOS DINÂMICOS ==========
+    // Aplicando a mesma lógica de botões "+" para cada modal de edição gerado
+    const editForms = document.querySelectorAll('form[id^="formEditar"]');
+    
+    editForms.forEach(form => {
+        const pecaId = form.getAttribute('action').split('/').pop();
+        const btnAddFotoEdit = form.querySelector('.btn-add-foto-edit');
+        const btnAddVideoEdit = form.querySelector('.btn-add-video-edit');
+        const containerFotosEdit = document.getElementById(`container-fotos-edit-${pecaId}`);
+        const containerVideosEdit = document.getElementById(`container-videos-edit-${pecaId}`);
+        
+        // Verifica quantas mídias já existem (e não estão marcadas para exclusão)
+        const getAtuaisCount = (tipo) => {
+            const cards = form.querySelectorAll(`.midia-card-atual[data-tipo="${tipo}"]`);
+            let count = cards.length;
+            cards.forEach(card => {
+                const checkbox = card.querySelector('.check-excluir');
+                if (checkbox.checked) count--; // Se marcou pra apagar, "libera" espaço
+            });
+            return count;
+        };
+
+        const checkLimitsEdit = () => {
+            const fotosTotal = getAtuaisCount('foto') + containerFotosEdit.children.length;
+            const videosTotal = getAtuaisCount('video') + containerVideosEdit.children.length;
+            
+            btnAddFotoEdit.style.display = fotosTotal >= 6 ? 'none' : 'inline-block';
+            btnAddVideoEdit.style.display = videosTotal >= 6 ? 'none' : 'inline-block';
+        };
+
+        // Recalcular limites se o usuário marcar/desmarcar o checkbox de "Apagar"
+        const checkboxesExcluir = form.querySelectorAll('.check-excluir');
+        checkboxesExcluir.forEach(cb => {
+            cb.addEventListener('change', checkLimitsEdit);
+        });
+
+        // Adiciona os event listeners aos botões
+        btnAddFotoEdit.addEventListener('click', () => {
+            if (getAtuaisCount('foto') + containerFotosEdit.children.length >= 6) {
+                alert("Você já atingiu o limite de 6 fotos.");
+                return;
+            }
+            createFotoField(containerFotosEdit, checkLimitsEdit);
+        });
+
+        btnAddVideoEdit.addEventListener('click', () => {
+            if (getAtuaisCount('video') + containerVideosEdit.children.length >= 6) {
+                alert("Você já atingiu o limite de 6 vídeos.");
+                return;
+            }
+            createVideoField(containerVideosEdit, checkLimitsEdit);
+        });
+
+        // Inicia a verificação (sem adicionar campos vazios na edição para não poluir)
+        checkLimitsEdit();
+    });
 });
 
-console.log('✅ Scripts do painel admin atualizados com inputs dinâmicos.');
+console.log('✅ Scripts do painel admin carregados (Cadastro e Edição dinâmicos).');
 </script>
 
 </body>
