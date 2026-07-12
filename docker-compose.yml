@@ -6,8 +6,8 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      # O volume mapeia a sua pasta local para dentro do Docker.
-      # Assim, se você editar um arquivo, o servidor atualiza na hora sem precisar fazer rebuild.
       - ./:/code
-    # Sobrescrevemos o comando para ativar o modo --reload (atualização automática)
+    env_file:
+      - .env
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+

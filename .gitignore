@@ -6,6 +6,7 @@ venv/
 env/
 .venv/
 
+
 # Banco de Dados Local (Não queremos subir os dados de teste)
 museu.db
 *.sqlite3
@@ -19,7 +20,7 @@ app/static/qrcodes/*
 
 # Variáveis de Ambiente e Segredos
 .env
-
+!.env.example
 # Configurações de IDE e Sistema Operacional
 .vscode/
 .idea/

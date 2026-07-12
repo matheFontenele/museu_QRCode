@@ -5,3 +5,5 @@ sqlalchemy
 python-multipart
 qrcode
 Pillow
+psycopg2-binary
+python-dotenv
