@@ -20,7 +20,9 @@ app/static/qrcodes/*
 
 # Variáveis de Ambiente e Segredos
 .env
+.env.*
 !.env.example
+
 # Configurações de IDE e Sistema Operacional
 .vscode/
 .idea/

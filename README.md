@@ -9,11 +9,12 @@ O fluxo principal e simples: o curador cadastra uma peca no painel administrativ
 - Painel administrativo protegido por autenticacao HTTP Basic.
 - Cadastro, edicao e exclusao de pecas do acervo.
 - Geracao automatica de QR Code para cada peca cadastrada.
-- Upload de fotos para cada item.
+- Upload de fotos para a Cloudinary.
 - Cadastro de links do YouTube para exibicao em carrossel.
 - Limite de ate 6 fotos e 6 videos por peca.
 - Pagina publica responsiva para visitantes.
 - Armazenamento dos dados em banco PostgreSQL via `DATABASE_URL`.
+- Armazenamento dos links das midias e dos QR Codes no banco.
 
 ## Tecnologias
 
@@ -25,6 +26,7 @@ O fluxo principal e simples: o curador cadastra uma peca no painel administrativ
 - PostgreSQL / Supabase
 - python-dotenv
 - qrcode + Pillow
+- Cloudinary
 - Bootstrap 5
 - Docker e Docker Compose
 
@@ -40,8 +42,8 @@ O fluxo principal e simples: o curador cadastra uma peca no painel administrativ
 |   |   |-- admin.py             # Rotas protegidas do painel administrativo
 |   |   `-- public.py            # Rota publica de visualizacao da peca
 |   |-- static/
-|   |   |-- qrcodes/             # QR Codes gerados automaticamente
-|   |   `-- uploads/             # Fotos enviadas pelo painel
+|   |   |-- qrcodes/             # Pasta mantida para arquivos estaticos locais
+|   |   `-- uploads/             # Pasta mantida para arquivos estaticos locais
 |   `-- templates/
 |       |-- admin/index.html     # Interface do painel administrativo
 |       `-- public/peca.html     # Pagina publica da peca
@@ -53,7 +55,7 @@ O fluxo principal e simples: o curador cadastra uma peca no painel administrativ
 
 ## Variaveis de ambiente
 
-O projeto exige a variavel `DATABASE_URL`.
+O projeto usa variaveis de ambiente para guardar credenciais e configuracoes sensiveis.
 
 Crie um arquivo `.env` na raiz do projeto:
 
@@ -61,13 +63,18 @@ Crie um arquivo `.env` na raiz do projeto:
 cp .env.example .env
 ```
 
-Depois preencha a conexao do PostgreSQL:
+Depois preencha os valores reais:
 
 ```env
 DATABASE_URL=postgresql://usuario:senha@host:5432/nome_do_banco
+CLOUDINARY_CLOUD_NAME=seu_cloud_name
+CLOUDINARY_API_KEY=sua_api_key
+CLOUDINARY_API_SECRET=sua_api_secret
 ```
 
 Para Supabase, use a URL de conexao PostgreSQL fornecida pelo painel do projeto.
+
+O arquivo `.env.example` deve ser commitado como modelo, sem segredos reais. O arquivo `.env` local e variacoes como `.env.local` devem permanecer fora do Git.
 
 ## Como executar com Docker
 
@@ -129,20 +136,26 @@ Representa uma foto enviada ou um link de video vinculado a uma peca.
 - `url_path`
 - `legenda`
 
-## Arquivos gerados
+## Midias e arquivos gerados
 
-Os arquivos enviados e gerados ficam em:
+As fotos enviadas pelo painel e os QR Codes gerados pela aplicacao sao enviados para a Cloudinary:
+
+```text
+museu/fotos
+museu/qrcodes
+```
+
+O banco salva as URLs seguras retornadas pela Cloudinary. As pastas locais abaixo continuam no projeto como estrutura de arquivos estaticos, mas o conteudo gerado nao deve ser versionado:
 
 ```text
 app/static/uploads/
 app/static/qrcodes/
 ```
 
-O conteudo dessas pastas e ignorado pelo Git, mantendo apenas os arquivos `.gitkeep`. Isso evita versionar imagens, videos e QR Codes gerados durante o uso da aplicacao.
-
 ## Observacoes importantes
 
 - O painel aceita imagens pelo formulario e links do YouTube para videos.
 - O frontend valida alguns limites, mas o backend tambem bloqueia mais de 6 fotos ou 6 videos por peca.
 - A pagina publica monta os videos do YouTube em `iframe` a partir do link salvo.
+- Ao excluir uma midia no painel, a referencia e removida do banco. A limpeza do arquivo na Cloudinary deve ser feita separadamente, caso necessario.
 - O projeto atualmente esta otimizado para execucao via Docker por causa dos caminhos absolutos usados em `app/main.py` e `app/routes/admin.py`.

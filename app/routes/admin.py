@@ -1,7 +1,10 @@
 import os
-import shutil
+import io
 import qrcode
 import secrets
+import cloudinary
+import cloudinary.uploader
+from dotenv import load_dotenv
 from fastapi import APIRouter, Request, Depends, Form, File, UploadFile, HTTPException, status
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from fastapi.responses import RedirectResponse
@@ -10,9 +13,17 @@ from sqlalchemy.orm import Session
 from .. import models, database
 from urllib.parse import quote
 
-router = APIRouter()
+# Carrega as variáveis do arquivo .env (segurança local)
+load_dotenv()
 
-# Instancia o esquema de segurança básico
+# ========== CONFIGURAÇÃO CLOUDINARY ==========
+cloudinary.config( 
+  cloud_name = os.getenv("CLOUDINARY_CLOUD_NAME"), 
+  api_key = os.getenv("CLOUDINARY_API_KEY"), 
+  api_secret = os.getenv("CLOUDINARY_API_SECRET") 
+)
+
+router = APIRouter()
 security = HTTPBasic()
 
 # ========== FUNÇÃO DE VERIFICAÇÃO DE ACESSO ==========
@@ -35,11 +46,6 @@ def verificar_credenciais(credentials: HTTPBasicCredentials = Depends(security))
 
 # Garantia absoluta do caminho dos templates no Docker
 templates = Jinja2Templates(directory="/code/app/templates")
-
-# ========== CAMINHOS FORÇADOS E ABSOLUTOS DO DOCKER ==========
-STATIC_DIR = "/code/app/static"
-UPLOADS_DIR = os.path.join(STATIC_DIR, "uploads")
-QRCODES_DIR = os.path.join(STATIC_DIR, "qrcodes")
 
 # ====== ROTAS ======
 
@@ -85,37 +91,37 @@ async def cadastrar_peca(
         db.add(nova_peca)
         db.commit()
         db.refresh(nova_peca)
+        
+        # 1. Gera o QR Code na memória e faz o upload pro Cloudinary
         base_url = str(request.base_url).rstrip("/")
         url_publica = f"{base_url}/peca/{nova_peca.id}"        
         qr = qrcode.make(url_publica)
-        qr_filename = f"qr_peca_{nova_peca.id}.png"
-        qr_path_full = os.path.join(QRCODES_DIR, qr_filename)
-        qr.save(qr_path_full)
-        qr_path_db = f"/static/qrcodes/{qr_filename}"
-        nova_peca.qr_code_path = qr_path_db
+        
+        buffer = io.BytesIO()
+        qr.save(buffer, format="PNG")
+        buffer.seek(0)
+        
+        upload_qr = cloudinary.uploader.upload(buffer, folder="museu/qrcodes")
+        nova_peca.qr_code_path = upload_qr["secure_url"] # Salva o link seguro do Cloudinary
         db.commit()
         
-        # Processamento das Fotos Unitárias
+        # 2. Upload das Fotos Unitárias direto pro Cloudinary
         for arquivo in fotos_validas:
             try:
-                nome_seguro = f"peca_{nova_peca.id}_{arquivo.filename.replace(' ', '_')}"
-                caminho_arquivo = os.path.join(UPLOADS_DIR, nome_seguro)
-                
-                with open(caminho_arquivo, "wb") as buffer:
-                    shutil.copyfileobj(arquivo.file, buffer)
+                upload_foto = cloudinary.uploader.upload(arquivo.file, folder="museu/fotos")
                 
                 nova_midia = models.Midia(
                     peca_id=nova_peca.id,
                     tipo="foto",
-                    url_path=f"/static/uploads/{nome_seguro}",
+                    url_path=upload_foto["secure_url"], # Link seguro do Cloudinary
                     legenda=f"Foto do artefato: {titulo}"
                 )
                 db.add(nova_midia)
             except Exception as e:
-                print(f"Erro ao salvar foto: {e}")
+                print(f"Erro ao subir foto: {e}")
                 continue
                 
-        # Processamento dos Links do YouTube
+        # 3. Processamento dos Links do YouTube
         for link in links_validos:
             nova_midia = models.Midia(
                 peca_id=nova_peca.id,
@@ -153,11 +159,11 @@ async def editar_peca(
         fotos_validas = [f for f in novas_fotos if f.filename]
         links_validos = [link.strip() for link in novos_youtube_links.split('\n') if link.strip()]
 
-        # 2. Calcula como vai ficar o total (Atuais que não serão excluídas + Novas)
+        # 2. Calcula como vai ficar o total
         fotos_atuais = len([m for m in peca.midias if m.tipo == 'foto' and m.id not in midias_para_excluir])
         videos_atuais = len([m for m in peca.midias if m.tipo == 'video' and m.id not in midias_para_excluir])
         
-        # 3. Trava de segurança elegante (Redireciona com mensagem de erro)
+        # 3. Trava de segurança
         if (fotos_atuais + len(fotos_validas)) > 6 or (videos_atuais + len(links_validos)) > 6:
             msg = quote("A peça não pode ter mais de 6 fotos ou 6 vídeos no total. Nenhuma alteração foi salva.")
             return RedirectResponse(url=f"/admin?erro={msg}", status_code=303)
@@ -166,34 +172,23 @@ async def editar_peca(
         peca.titulo = titulo
         peca.descricao = descricao
         
-        # 5. Processa a exclusão das mídias antigas (Só chega aqui se passou no limite)
+        # 5. Processa a exclusão das mídias antigas do Banco de Dados
         for midia_id in midias_para_excluir:
             midia_obj = db.query(models.Midia).filter(models.Midia.id == midia_id, models.Midia.peca_id == peca_id).first()
             if midia_obj:
-                if midia_obj.tipo == "foto":
-                    filename = midia_obj.url_path.split('/')[-1]
-                    caminho_fisico = os.path.join(UPLOADS_DIR, filename)
-                    if os.path.exists(caminho_fisico):
-                        os.remove(caminho_fisico)
-                
-                # Deleta do banco
-                db.delete(midia_obj)
+                db.delete(midia_obj) # Apenas deleta a referência, o arquivo no Cloudinary pode ser limpo depois manualmente ou via API avançada
         
         # Salva as exclusões
         db.commit()
         db.refresh(peca)
 
-        # 6. Adiciona as Novas Fotos
+        # 6. Adiciona as Novas Fotos no Cloudinary
         for arquivo in fotos_validas:
-            nome_seguro = f"peca_{peca.id}_{arquivo.filename.replace(' ', '_')}"
-            caminho_arquivo = os.path.join(UPLOADS_DIR, nome_seguro)
-            
-            with open(caminho_arquivo, "wb") as buffer:
-                shutil.copyfileobj(arquivo.file, buffer)
+            upload_foto = cloudinary.uploader.upload(arquivo.file, folder="museu/fotos")
             
             nova_midia = models.Midia(
                 peca_id=peca.id, tipo="foto",
-                url_path=f"/static/uploads/{nome_seguro}",
+                url_path=upload_foto["secure_url"],
                 legenda=f"Foto do artefato: {titulo}"
             )
             db.add(nova_midia)
