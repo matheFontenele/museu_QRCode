@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Etiqueta - {{ peca.titulo }}</title>
+    <style>
+        /* Estilos visuais para a tela do computador */
+        body {
+            background-color: #f0f2f5;
+            font-family: 'Georgia', serif; /* Fonte serifada dá um ar clássico de museu */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* O Card de Impressão (Medidas aproximadas de 10x15cm) */
+        .etiqueta-card {
+            background: white;
+            width: 10cm;
+            height: 15cm;
+            padding: 20px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        /* Elementos da Etiqueta */
+        .museu-header {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #555;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            width: 100%;
+        }
+
+        .foto-principal {
+            width: 100%;
+            height: 4.5cm;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            filter: grayscale(20%); /* Dá um leve tom museológico */
+        }
+
+        .titulo {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #222;
+            margin: 0 0 10px 0;
+            line-height: 1.2;
+        }
+
+        .descricao-resumo {
+            font-family: 'Arial', sans-serif;
+            font-size: 0.75rem;
+            color: #444;
+            flex-grow: 1; /* Empurra o QR Code para baixo */
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 4; /* Limita a exatas 4 linhas */
+            -webkit-box-orient: vertical;
+            margin-bottom: 15px;
+        }
+
+        .qr-section {
+            border-top: 1px dashed #ccc;
+            padding-top: 15px;
+            width: 100%;
+        }
+
+        .qr-code {
+            width: 2.5cm;
+            height: 2.5cm;
+        }
+
+        .qr-texto {
+            font-family: 'Arial', sans-serif;
+            font-size: 0.65rem;
+            color: #666;
+            margin-top: 5px;
+            font-weight: bold;
+        }
+
+        /* Botão flutuante na tela (Escondido na hora de imprimir) */
+        .btn-imprimir {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #1e2b3c;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        /* ========== MÁGICA DA IMPRESSÃO ========== */
+        @media print {
+            body { background: white; }
+            .etiqueta-card {
+                box-shadow: none;
+                border: none;
+                /* As gráficas usam essas marcações de corte */
+                outline: 1px dotted #999; 
+            }
+            .btn-imprimir { display: none; } /* O botão some no papel! */
+            @page {
+                size: A4;
+                margin: 0; /* Tira as margens padrão do navegador */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Botão visível apenas na tela -->
+    <button class="btn-imprimir" onclick="window.print()">🖨️ Imprimir Etiqueta</button>
+
+    <!-- O Card que vai para o papel -->
+    <div class="etiqueta-card">
+        <div class="museu-header">
+            Museu da Bíblia
+        </div>
+
+        {% if foto_principal %}
+            <img src="{{ foto_principal }}" class="foto-principal" alt="Foto da peça">
+        {% else %}
+            <!-- Espaço reservado caso a peça não tenha foto -->
+            <div style="width: 100%; height: 4.5cm; background: #eee; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; color: #999;">
+                Sem Imagem
+            </div>
+        {% endif %}
+
+        <h1 class="titulo">{{ peca.titulo }}</h1>
+        
+        <!-- Pega os primeiros 200 caracteres da descrição e adiciona '...' -->
+        <div class="descricao-resumo">
+            {{ peca.descricao[:200] }}{% if peca.descricao|length > 200 %}...{% endif %}
+        </div>
+
+        <div class="qr-section">
+            <img src="{{ peca.qr_code_path }}" class="qr-code" alt="QR Code">
+            <div class="qr-texto">Escaneie para história completa, áudio e mais fotos</div>
+        </div>
+    </div>
+
+    <!-- Script para abrir a janela de impressão automaticamente ao carregar -->
+    <script>
+        window.onload = function() {
+            setTimeout(function() {
+                window.print();
+            }, 500); // Espera meio segundo para as imagens carregarem
+        };
+    </script>
+</body>
+</html>

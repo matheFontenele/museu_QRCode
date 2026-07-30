@@ -7,7 +7,7 @@ import cloudinary.uploader
 from dotenv import load_dotenv
 from fastapi import APIRouter, Request, Depends, Form, File, UploadFile, HTTPException, status
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, HTMLResponse # <-- IMPORTANTE: HTMLResponse adicionado
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from .. import models, database
@@ -23,6 +23,7 @@ cloudinary.config(
   api_secret = os.getenv("CLOUDINARY_API_SECRET") 
 )
 
+PASTA_BASE = os.getenv("CLOUDINARY_FOLDER", "museu")
 router = APIRouter()
 security = HTTPBasic()
 
@@ -101,14 +102,16 @@ async def cadastrar_peca(
         qr.save(buffer, format="PNG")
         buffer.seek(0)
         
-        upload_qr = cloudinary.uploader.upload(buffer, folder="museu/qrcodes")
+        # CORREÇÃO: f-string aplicada
+        upload_qr = cloudinary.uploader.upload(buffer, folder=f"{PASTA_BASE}/qrcodes")
         nova_peca.qr_code_path = upload_qr["secure_url"] # Salva o link seguro do Cloudinary
         db.commit()
         
         # 2. Upload das Fotos Unitárias direto pro Cloudinary
         for arquivo in fotos_validas:
             try:
-                upload_foto = cloudinary.uploader.upload(arquivo.file, folder="museu/fotos")
+                # CORREÇÃO: f-string aplicada
+                upload_foto = cloudinary.uploader.upload(arquivo.file, folder=f"{PASTA_BASE}/fotos")
                 
                 nova_midia = models.Midia(
                     peca_id=nova_peca.id,
@@ -176,7 +179,7 @@ async def editar_peca(
         for midia_id in midias_para_excluir:
             midia_obj = db.query(models.Midia).filter(models.Midia.id == midia_id, models.Midia.peca_id == peca_id).first()
             if midia_obj:
-                db.delete(midia_obj) # Apenas deleta a referência, o arquivo no Cloudinary pode ser limpo depois manualmente ou via API avançada
+                db.delete(midia_obj) 
         
         # Salva as exclusões
         db.commit()
@@ -184,7 +187,8 @@ async def editar_peca(
 
         # 6. Adiciona as Novas Fotos no Cloudinary
         for arquivo in fotos_validas:
-            upload_foto = cloudinary.uploader.upload(arquivo.file, folder="museu/fotos")
+            # CORREÇÃO: Variável PASTA_BASE aplicada na edição
+            upload_foto = cloudinary.uploader.upload(arquivo.file, folder=f"{PASTA_BASE}/fotos")
             
             nova_midia = models.Midia(
                 peca_id=peca.id, tipo="foto",
@@ -223,3 +227,28 @@ async def deletar_peca(
     db.delete(peca)
     db.commit()    
     return RedirectResponse(url="/admin", status_code=303)
+
+# ====== ROTA: ETIQUETA PARA IMPRESSÃO ======
+@router.get("/etiqueta/{peca_id}", response_class=HTMLResponse)
+async def gerar_etiqueta(
+    peca_id: int, 
+    request: Request, 
+    db: Session = Depends(database.get_db),
+    usuario: str = Depends(verificar_credenciais) # <-- CADEADO ATIVADO (Somente Admin imprime)
+):
+    peca = db.query(models.Peca).filter(models.Peca.id == peca_id).first()
+    
+    if not peca:
+        return RedirectResponse(url="/admin?erro=Peça não encontrada", status_code=303)
+        
+    # Tenta achar a primeira foto cadastrada para ser a "Capa" da etiqueta
+    foto_principal = next((m.url_path for m in peca.midias if m.tipo == 'foto'), None)
+    
+    return templates.TemplateResponse(
+        request=request,
+        name="admin/etiqueta.html", 
+        context={
+            "peca": peca, 
+            "foto_principal": foto_principal
+        }
+    )

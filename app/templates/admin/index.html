@@ -97,62 +97,45 @@
         .alert-warning { background-color: #fff4e6; color: #cc7700; }
         .alert-success { background-color: #e6f9e6; color: #00aa00; }
         
-        /* ========== CARD ========== */
-        .card {
+        /* ========== CARD (Obras) ========== */
+        .card-obra {
             border: none;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-            border-radius: 12px;
-            transition: box-shadow 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            background: white;
         }
         
-        .card:hover { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12); }
-        
-        /* ========== TABELA ========== */
-        .table { margin-bottom: 0; }
-        .table thead { background-color: #f8f9fa; border-bottom: 2px solid #dee2e6; }
-        
-        .table th {
-            font-weight: 700;
-            color: var(--primary-color);
-            padding: 1rem;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            letter-spacing: 0.5px;
+        .card-obra:hover { 
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); 
+            transform: translateY(-5px);
         }
-        
-        .table td {
-            padding: 1rem;
-            vertical-align: middle;
-            border-bottom: 1px solid #e9ecef;
-        }
-        
-        .table tbody tr { transition: background-color 0.2s ease; }
-        .table tbody tr:hover { background-color: rgba(30, 43, 60, 0.02); }
         
         /* ========== QR CODE ========== */
         .qr-code-container {
             display: flex;
             align-items: center;
             justify-content: center;
+            height: 140px;
         }
         
         .qr-code-img {
-            width: 80px;
-            height: 80px;
+            width: 120px;
+            height: 120px;
             object-fit: contain;
             cursor: pointer;
             transition: transform 0.2s ease, filter 0.2s ease;
-            border-radius: 8px;
-            padding: 4px;
+            border-radius: 12px;
+            padding: 8px;
             background: white;
+            border: 2px solid #f4f6f9;
         }
         
         .qr-code-img:hover {
-            transform: scale(1.15);
-            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
+            transform: scale(1.1);
+            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1));
+            border-color: #e0e0e0;
         }
-        
-        .qr-code-img:active { transform: scale(1.1); }
         
         .badge-pendente {
             background-color: #6c757d;
@@ -164,12 +147,12 @@
         }
         
         /* ========== BADGES & BOTÕES ========== */
-        .badge { padding: 0.5rem 0.75rem; border-radius: 6px; font-weight: 500; font-size: 0.85rem; }
+        .badge { padding: 0.5rem 0.75rem; border-radius: 8px; font-weight: 600; font-size: 0.85rem; }
         .btn { border-radius: 8px; font-weight: 600; padding: 0.5rem 1rem; transition: all 0.3s ease; }
         .btn-primary { background-color: var(--primary-color); border-color: var(--primary-color); }
         .btn-primary:hover { background-color: #152038; border-color: #152038; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(30, 43, 60, 0.3); }
-        .btn-outline-success:hover { transform: translateY(-2px); }
-        .btn-sm { padding: 0.35rem 0.75rem; font-size: 0.8rem; }
+        .btn-outline-success:hover, .btn-outline-warning:hover, .btn-outline-danger:hover { transform: translateY(-2px); }
+        .btn-sm { padding: 0.35rem 0.75rem; font-size: 0.85rem; }
         
         /* ========== MODAL ========== */
         .modal-header { background: linear-gradient(90deg, var(--primary-color), #2a3f5f); border-bottom: none; border-radius: 12px 12px 0 0; }
@@ -182,13 +165,12 @@
         
         /* ========== UTILITIES ========== */
         .text-truncate-2 { display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .text-truncate-3 { display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
         .loading-spinner { display: none; }
         @media (max-width: 768px) {
             main { padding: 1rem; }
             .page-header { flex-direction: column; align-items: flex-start; }
             .page-header h1 { font-size: 1.5rem; }
-            .table { font-size: 0.85rem; }
-            .qr-code-img { width: 60px; height: 60px; }
             .btn-sm { display: block; width: 100%; margin-top: 0.5rem; }
         }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -224,14 +206,13 @@
                 </button>
             </div>
 
-            <!-- ALERTA DE ERRO (Vindo do Backend se exceder o limite nas edições) -->
+            <!-- ALERTA DE ERRO -->
             {% if request.query_params.get('erro') %}
             <div class="alert alert-danger alert-dismissible fade show fade-in shadow-sm" role="alert">
                 <strong>⚠️ Ação bloqueada:</strong> {{ request.query_params.get('erro') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar alerta"></button>
             </div>
             <script>
-                // Limpa a URL silenciosamente para o erro não reaparecer se o usuário der um F5
                 window.history.replaceState({}, document.title, "/admin");
             </script>
             {% endif %}
@@ -245,86 +226,80 @@
             </div>
             {% endif %}
 
-            <!-- TABELA DE PEÇAS -->
-            <div class="card p-0 fade-in">
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col" style="width: 5%;">ID</th>
-                                <th scope="col" style="width: 15%;">QR Code</th>
-                                <th scope="col" style="width: 35%;">Título</th>
-                                <th scope="col" style="width: 15%;">Mídias</th>
-                                <th scope="col" style="width: 30%;">Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for peca in pecas %}
-                            <tr>
-                                <!-- COLUNA: ID -->
-                                <td>
-                                    <span class="badge bg-primary">#{{ peca.id }}</span>
-                                </td>
+            <!-- ========== GRID DE CARDS (Substitui a antiga Tabela) ========== -->
+            <div class="row g-4 fade-in">
+                {% for peca in pecas %}
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card card-obra h-100 d-flex flex-column">
+                        <div class="card-body text-center p-4 d-flex flex-column">
+                            
+                            <!-- 1. Selo de ID -->
+                            <div class="mb-3 text-start">
+                                <span class="badge bg-primary">ID: #{{ peca.id }}</span>
+                            </div>
+
+                            <!-- 2. QR Code (Centralizado) -->
+                            <div class="qr-code-container mb-3">
+                                {% if peca.qr_code_path %}
+                                    <a href="{{ peca.qr_code_path }}" target="_blank" rel="noopener noreferrer" title="Ampliar QR Code">
+                                        <img src="{{ peca.qr_code_path }}?v={{ peca.id }}" alt="QR Code" class="qr-code-img">
+                                    </a>
+                                {% else %}
+                                    <span class="badge badge-pendente">⏳ Pendente</span>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- 3. Título e Descrição -->
+                            <h5 class="fw-bold text-dark mb-2">{{ peca.titulo }}</h5>
+                            <p class="text-muted small mb-3 text-truncate-3 flex-grow-1">
+                                {% if peca.descricao %}
+                                    {{ peca.descricao }}
+                                {% else %}
+                                    <span class="fst-italic">Sem descrição</span>
+                                {% endif %}
+                            </p>
+                            
+                            <!-- 4. Etiqueta de Mídias -->
+                            <div class="mb-4">
+                                {% if peca.midias and peca.midias|length > 0 %}
+                                    <span class="badge bg-success rounded-pill px-3 py-2 text-white">📁 {{ peca.midias|length }} arquivo(s)</span>
+                                {% else %}
+                                    <span class="badge bg-light text-secondary border rounded-pill px-3 py-2">Nenhuma mídia</span>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- 5. Botões de Ação (Empurrados para o fundo do card) -->
+                            <div class="mt-auto border-top pt-3">
+                                <a href="/admin/etiqueta/{{ peca.id }}" target="_blank" class="btn btn-dark btn-sm w-100 mb-2 shadow-sm">
+                                    🖨️ Gerar Etiqueta (Impressão)
+                                </a>
                                 
-                                <!-- COLUNA: QR CODE -->
-                                <td class="qr-code-container">
-                                    {% if peca.qr_code_path %}
-                                        <a href="{{ peca.qr_code_path }}" target="_blank" rel="noopener noreferrer" class="d-inline-block cursor-pointer">
-                                            <img src="{{ peca.qr_code_path }}?v={{ peca.id }}" alt="QR Code da peça {{ peca.id }}" class="qr-code-img border rounded" loading="lazy">
-                                        </a>
-                                    {% else %}
-                                        <span class="badge badge-pendente">⏳ Pendente</span>
-                                    {% endif %}
-                                </td>
-                                
-                                <!-- COLUNA: TÍTULO E DESCRIÇÃO -->
-                                <td>
-                                    <div class="fw-bold">{{ peca.titulo }}</div>
-                                    {% if peca.descricao %}
-                                        <small class="text-muted text-truncate-2">{{ peca.descricao[:80] }}{% if peca.descricao|length > 80 %}...{% endif %}</small>
-                                    {% else %}
-                                        <small class="text-muted fst-italic">Sem descrição</small>
-                                    {% endif %}
-                                </td>
-                                
-                                <!-- COLUNA: MÍDIAS -->
-                                <td>
-                                    {% if peca.midias and peca.midias|length > 0 %}
-                                        <span class="badge bg-success cursor-pointer">📁 {{ peca.midias|length }} arquivo(s)</span>
-                                    {% else %}
-                                        <span class="badge bg-secondary">Nenhuma mídia</span>
-                                    {% endif %}
-                                </td>
-                                
-                                <!-- COLUNA: AÇÕES -->
-                                <td>
-                                    <div class="d-flex gap-2">
-                                        <a href="/peca/{{ peca.id }}" target="_blank" class="btn btn-sm btn-outline-success" title="Ver Visitante">
-                                            Ver Peça
-                                        </a>
-                                        <button class="btn btn-sm btn-outline-warning" data-bs-toggle="modal" data-bs-target="#editarModal{{ peca.id }}" title="Editar Peça">
-                                            Editar Peça
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deletarModal{{ peca.id }}" title="Excluir Peça">
-                                            Excluir Peça
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            {% else %}
-                            <tr>
-                                <td colspan="5" class="text-center text-muted py-5">
-                                    <div style="font-size: 2rem; margin-bottom: 1rem;">📭</div>
-                                    <strong>Nenhum item cadastrado ainda.</strong> 
-                                    <br>
-                                    <small>Clique no botão "<strong>+ Novo Item</strong>" para começar a adicionar peças ao seu acervo.</small>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                                <div class="d-flex gap-2 mb-2">
+                                    <a href="/peca/{{ peca.id }}" target="_blank" class="btn btn-outline-success btn-sm w-50">
+                                        👁️ Ver Peça
+                                    </a>
+                                    <button class="btn btn-outline-warning btn-sm w-50" data-bs-toggle="modal" data-bs-target="#editarModal{{ peca.id }}">
+                                        ✏️ Editar
+                                    </button>
+                                </div>
+                                <button class="btn btn-outline-danger btn-sm w-100" data-bs-toggle="modal" data-bs-target="#deletarModal{{ peca.id }}">
+                                    🗑️ Excluir Peça
+                                </button>
+                            </div>
+                            
+                        </div>
+                    </div>
                 </div>
+                {% else %}
+                <!-- Empty State Integrado -->
+                <div class="col-12 text-center text-muted py-5 mt-4">
+                    <div style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;">📭</div>
+                    <h5>O acervo está vazio</h5>
+                    <small>Adicione itens para visualizá-los aqui.</small>
+                </div>
+                {% endfor %}
             </div>
+            <!-- ========== FIM DO GRID DE CARDS ========== -->
 
         </main>
 
@@ -611,7 +586,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ========== 2. EDIÇÃO: LÓGICA DOS CAMPOS DINÂMICOS ==========
-    // Aplicando a mesma lógica de botões "+" para cada modal de edição gerado
     const editForms = document.querySelectorAll('form[id^="formEditar"]');
     
     editForms.forEach(form => {
@@ -621,13 +595,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const containerFotosEdit = document.getElementById(`container-fotos-edit-${pecaId}`);
         const containerVideosEdit = document.getElementById(`container-videos-edit-${pecaId}`);
         
-        // Verifica quantas mídias já existem (e não estão marcadas para exclusão)
         const getAtuaisCount = (tipo) => {
             const cards = form.querySelectorAll(`.midia-card-atual[data-tipo="${tipo}"]`);
             let count = cards.length;
             cards.forEach(card => {
                 const checkbox = card.querySelector('.check-excluir');
-                if (checkbox.checked) count--; // Se marcou pra apagar, "libera" espaço
+                if (checkbox.checked) count--; 
             });
             return count;
         };
@@ -640,13 +613,11 @@ document.addEventListener('DOMContentLoaded', function() {
             btnAddVideoEdit.style.display = videosTotal >= 6 ? 'none' : 'inline-block';
         };
 
-        // Recalcular limites se o usuário marcar/desmarcar o checkbox de "Apagar"
         const checkboxesExcluir = form.querySelectorAll('.check-excluir');
         checkboxesExcluir.forEach(cb => {
             cb.addEventListener('change', checkLimitsEdit);
         });
 
-        // Adiciona os event listeners aos botões
         btnAddFotoEdit.addEventListener('click', () => {
             if (getAtuaisCount('foto') + containerFotosEdit.children.length >= 6) {
                 alert("Você já atingiu o limite de 6 fotos.");
@@ -663,12 +634,11 @@ document.addEventListener('DOMContentLoaded', function() {
             createVideoField(containerVideosEdit, checkLimitsEdit);
         });
 
-        // Inicia a verificação (sem adicionar campos vazios na edição para não poluir)
         checkLimitsEdit();
     });
 });
 
-console.log('✅ Scripts do painel admin carregados (Cadastro e Edição dinâmicos).');
+console.log('✅ Scripts do painel admin carregados (Grid de Cards e Modais).');
 </script>
 
 </body>
