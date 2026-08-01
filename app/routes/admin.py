@@ -1,6 +1,7 @@
 import os
 import io
 import qrcode
+import math
 import secrets
 import cloudinary
 import cloudinary.uploader
@@ -53,14 +54,39 @@ templates = Jinja2Templates(directory="/code/app/templates")
 @router.get("/")
 def painel_admin(
     request: Request, 
+    page: int = 1, # Lê a página atual da URL (padrão é 1)
     db: Session = Depends(database.get_db),
     usuario: str = Depends(verificar_credenciais) # <-- CADEADO ATIVADO
 ):
-    pecas = db.query(models.Peca).order_by(models.Peca.id.desc()).all()
+    itens_por_pagina = 9
+    
+    # 1. Descobre o total de peças cadastradas no banco
+    total_pecas = db.query(models.Peca).count()
+    
+    # 2. Calcula o total de páginas arredondando para cima
+    total_paginas = math.ceil(total_pecas / itens_por_pagina) if total_pecas > 0 else 1
+    
+    # 3. Trava de segurança (se o usuário digitar uma página que não existe na URL)
+    if page < 1:
+        page = 1
+    elif page > total_paginas and total_paginas > 0:
+        page = total_paginas
+        
+    # 4. Calcula o ponto de partida no banco de dados (Offset)
+    offset = (page - 1) * itens_por_pagina
+    
+    # 5. Busca apenas os 9 itens daquela página específica
+    pecas = db.query(models.Peca).order_by(models.Peca.id.desc()).limit(itens_por_pagina).offset(offset).all()
+    
     return templates.TemplateResponse(
         request=request,
         name="admin/index.html", 
-        context={"pecas": pecas}
+        context={
+            "pecas": pecas,
+            "page": page,
+            "total_pages": total_paginas,
+            "total_pecas": total_pecas
+        }
     )
 
 # ====== ROTA: CADASTRAR PEÇA ======

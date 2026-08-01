@@ -301,6 +301,39 @@
             </div>
             <!-- ========== FIM DO GRID DE CARDS ========== -->
 
+            <!-- ========== PAGINAÇÃO ========== -->
+            {% if total_pages > 1 %}
+            <nav aria-label="Navegação do Acervo" class="mt-5 fade-in">
+                <ul class="pagination justify-content-center pagination-lg">
+                    
+                    <!-- Botão Anterior -->
+                    <li class="page-item {% if page == 1 %}disabled{% endif %}">
+                        <a class="page-link fw-bold" href="/admin?page={{ page - 1 }}" tabindex="-1">
+                            &laquo; Anterior
+                        </a>
+                    </li>
+                    
+                    <!-- Números das Páginas -->
+                    {% for p in range(1, total_pages + 1) %}
+                    <li class="page-item {% if p == page %}active{% endif %}">
+                        <a class="page-link fw-bold" href="/admin?page={{ p }}">{{ p }}</a>
+                    </li>
+                    {% endfor %}
+                    
+                    <!-- Botão Próximo -->
+                    <li class="page-item {% if page == total_pages %}disabled{% endif %}">
+                        <a class="page-link fw-bold" href="/admin?page={{ page + 1 }}">
+                            Próximo &raquo;
+                        </a>
+                    </li>
+                    
+                </ul>
+                <div class="text-center text-muted small mt-2">
+                    Exibindo página {{ page }} de {{ total_pages }} (Total de {{ total_pecas }} obras)
+                </div>
+            </nav>
+            {% endif %}
+
         </main>
 
         <!-- ========== MODAIS DE EDIÇÃO E EXCLUSÃO (GERADOS PARA CADA PEÇA) ========== -->
